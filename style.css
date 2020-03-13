@@ -1,0 +1,131 @@
+﻿
+/*input[type=button] {
+    width: 100%;
+    padding: 8px 4px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #B3C2BF;
+    color: #3B3A36;
+}*/
+.title {
+    grid-area: header;
+    text-align: center;
+    padding: 20px 10px;
+    font-size: 32px;
+    background-color: #C0DFD9;
+    border-radius: 4px;
+    color: #3B3A36;
+}
+
+.scene {
+    grid-area: main;
+    background-color: #E9ECE5;
+}
+
+.left-controls {
+    display: grid;
+    grid-area: menu;
+    background-color: #C0DFD9;
+    border-radius: 4px;
+}
+
+.status {
+    grid-area: footer;
+    background-color: #C0DFD9;
+    border-radius: 4px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-areas: 'header header header header header' 'menu main main main right' 'menu footer footer footer footer';
+    grid-gap: 10px;
+    padding: 10px;
+}
+
+.grid-container > div {
+    text-align: center;
+    padding: 20px 20px;
+    font-size: 13px;
+}
+
+label {
+	border: 1px solid rgba($font-color,.15);
+	box-sizing: border-box;
+	display: block;
+	height: 100%;
+	width: 100%;
+	padding: 10px 10px 30px 10px;
+	cursor: pointer;
+	opacity: .5;
+	transition: all .5s ease-in-out;
+	&:hover, &:focus, &:active {
+		border: 1px solid rgba(92,128,45,.5);
+	}
+}
+
+label.curve-button {
+    background: url("images/curve.svg") no-repeat top left;
+    background-size: contain;
+    cursor: pointer;
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+}
+
+label.circle-button {
+    background: url("images/circle.svg") no-repeat top left;
+    background-size: contain;
+    cursor: pointer;
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+}
+
+label.select-object-button {
+    background: url("images/select-object.svg") no-repeat top left;
+    background-size: contain;
+    cursor: pointer;
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+}
+
+label.select-control-point-button {
+    background: url("images/select-control-point.svg") no-repeat top left;
+    background-size: contain;
+    cursor: pointer;
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+}
+
+input[type="radio"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+input[type="radio"]:active ~ label {
+    opacity: 0;
+}
+
+input[type="radio"]:checked ~ label {
+    opacity: 1;
+    border: 1px solid rgba(255,0,0,1);
+}
+
+.form_answer {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 23%;
+    margin: 10px 1% 10px 0;
+    height: 50px;
+    vertical-align: top;
+    font-size: 22px;
+    text-align: center;
+}
+
+

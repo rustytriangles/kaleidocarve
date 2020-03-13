@@ -1,0 +1,13 @@
+{
+  "name": "kaleidocarve",
+  "version": "0.0.0",
+  "description": "kaleidocarve",
+  "main": "main.js",
+  "author": {
+    "name": ""
+  },
+  "dependencies": {
+    "electron": "^8.1.1",
+    "scss": "^0.2.4"
+  }
+}
