@@ -22,15 +22,27 @@ window.addEventListener('DOMContentLoaded', () => {
     canvas.addEventListener('mouseup', (evt) => {
         handler.stop();
         if (handler.valid()) {
-            const strokeColor = document.getElementById('strokeColor_id');
-            var c = handler.createCurve(strokeColor.value);
-            const rect = canvas.getBoundingClientRect();
+            if (handler.getMode() == "draw_curve") {
+                const strokeColor = document.getElementById('strokeColor_id');
+                var c = handler.createCurve(strokeColor.value);
+                const rect = canvas.getBoundingClientRect();
 
-            scene.addCurve(c);
+                scene.addCurve(c);
 
-            var ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            scene.display(ctx, rect.width, rect.height);
+                var ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                scene.display(ctx, rect.width, rect.height);
+            } else if (handler.getMode() == "draw_circle") {
+                const strokeColor = document.getElementById('strokeColor_id');
+                var c = handler.createCircle(canvas.width, canvas.height, strokeColor.value);
+                const rect = canvas.getBoundingClientRect();
+
+                scene.addCurve(c);
+
+                var ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                scene.display(ctx, rect.width, rect.height);
+            }
         }
 
         handler.clear();
@@ -44,7 +56,11 @@ window.addEventListener('DOMContentLoaded', () => {
     canvas.addEventListener('mousemove', (evt) => {
         const rect = canvas.getBoundingClientRect();
         handler.addPoint(evt.clientX - rect.left, evt.clientY - rect.top);
-        handler.display(canvas.getContext('2d'));
+
+        var ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        scene.display(ctx, rect.width, rect.height);
+        handler.display(ctx, rect.width, rect.height);
     });
 
     numCopiesRange.addEventListener('change', (evt) => {
@@ -63,4 +79,19 @@ window.addEventListener('DOMContentLoaded', () => {
         scene.display(ctx, canvas.width, canvas.height);
     });
 
+    document.getElementById('curve_id').addEventListener('click', (evt) => {
+        handler.setMode("draw_curve");
+    });
+
+    document.getElementById('circle_id').addEventListener('click', (evt) => {
+        handler.setMode("draw_circle");
+    });
+
+    document.getElementById('selobj_id', (evt) => {
+        handler.setMode("select_object");
+    });
+
+    document.getElementById('selcpt_id', (evt) => {
+        handler.setMode("select_control_point");
+    });
 })

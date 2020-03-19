@@ -5,10 +5,20 @@ function dist(x0, x1, y0, y1) {
 }
 
 class MouseHandler {
+
     constructor() {
         this.x = [];
         this.y = [];
         this.collecting = false;
+        this.mode = "draw_curve";
+    }
+
+    setMode(new_mode) {
+        this.mode = new_mode;
+    }
+
+    getMode() {
+        return this.mode;
     }
 
     start() {
@@ -104,14 +114,35 @@ class MouseHandler {
         }
     }
 
-    display(ctx) {
-        if (this.x.length > 1) {
-            ctx.beginPath();
-            ctx.moveTo(this.x[0], this.y[0]);
-            for (let i = 0; i < this.x.length; i++) {
-                ctx.lineTo(this.x[i], this.y[i]);
+    createCircle(width, height, color) {
+        if (this.x.length >= 1 && this.y.length >= 1) {
+            let x = this.x[this.x.length - 1];
+            let y = this.y[this.y.length - 1];
+            let r = dist(width / 2, height / 2, x, y);
+            return new Circle(width / 2, height / 2, r, 2, color);
+        }
+    }
+
+    display(ctx, width, height) {
+        if (this.mode == "draw_curve") {
+            if (this.x.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(this.x[0], this.y[0]);
+                for (let i = 0; i < this.x.length; i++) {
+                    ctx.lineTo(this.x[i], this.y[i]);
+                }
+                ctx.stroke();
             }
-            ctx.stroke();
+        } else if (this.mode == "draw_circle") {
+            if (this.x.length > 0) {
+                let x = this.x[this.x.length - 1];
+                let y = this.y[this.y.length - 1];
+                let r = dist(width / 2, height / 2, x, y);
+                ctx.beginPath();
+                ctx.arc(width/2, height/2, r, 0, 2 * Math.PI);
+                ctx.stroke();
+
+            }
         }
     }
 

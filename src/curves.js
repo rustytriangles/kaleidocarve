@@ -142,3 +142,20 @@ class CubicCurve {
         }
     }
 }
+
+class Circle {
+    constructor(cx, cy, radius, strokewidth, color) {
+        this.cx = cx;
+        this.cy = cy;
+        this.radius = radius;
+        this.strokewidth = strokewidth;
+        this.color = color;
+
+    }
+
+    display(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.cx, this.cy, this.radius, 0, 2 * Math.PI);
+        ctx.stroke();        
+    }
+}
