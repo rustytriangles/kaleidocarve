@@ -4,8 +4,11 @@ function dist(x0, x1, y0, y1) {
     return Math.sqrt(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2));
 }
 
-class MouseHandler {
+function toDC(x, y, s, w, h) {
+    return [x * s + w / 2, y * s + h / 2];
+}
 
+class MouseHandler {
     constructor() {
         this.x = [];
         this.y = [];
@@ -13,8 +16,8 @@ class MouseHandler {
         this.mode = "draw_curve";
     }
 
-    setMode(new_mode) {
-        this.mode = new_mode;
+    setMode(newMode) {
+        this.mode = newMode;
     }
 
     getMode() {
@@ -115,7 +118,7 @@ class MouseHandler {
     }
 
     createCircle(width, height, color) {
-        if (this.x.length >= 1 && this.y.length >= 1) {
+        if (this.x.length >= 1 && this.y.length > 1) {
             let x = this.x[this.x.length - 1];
             let y = this.y[this.y.length - 1];
             let r = dist(width / 2, height / 2, x, y);
@@ -124,25 +127,20 @@ class MouseHandler {
     }
 
     display(ctx, width, height) {
-        if (this.mode == "draw_curve") {
+        if (this.mode == 'draw_curve') {
             if (this.x.length > 1) {
                 ctx.beginPath();
-                ctx.moveTo(this.x[0], this.y[0]);
+                var scale = Math.max(width, height) / 2;
+                var pt = toDC(this.x[0], this.y[0], scale, width, height);
+                ctx.moveTo(pt[0], pt[1]);
                 for (let i = 0; i < this.x.length; i++) {
-                    ctx.lineTo(this.x[i], this.y[i]);
+                    pt = toDC(this.x[i], this.y[i], scale, width, height);
+                    ctx.lineTo(pt[0], pt[1]);
                 }
                 ctx.stroke();
             }
-        } else if (this.mode == "draw_circle") {
-            if (this.x.length > 0) {
-                let x = this.x[this.x.length - 1];
-                let y = this.y[this.y.length - 1];
-                let r = dist(width / 2, height / 2, x, y);
-                ctx.beginPath();
-                ctx.arc(width/2, height/2, r, 0, 2 * Math.PI);
-                ctx.stroke();
+        } else if (this.mode == 'draw_circle') {
 
-            }
         }
     }
 

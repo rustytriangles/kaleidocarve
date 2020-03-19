@@ -1,19 +1,16 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <!--<script src="https://kit.fontawesome.com/a5dff8233b.js" crossorigin="anonymous"></script>-->
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <link rel="stylesheet" href="style.css" />
     <title>KaleidoCarve</title>
 </head>
 <body>
-    <div class="grid-container">
-        <span class="title">KaleidoCarve</span>
-        <canvas id="canvas" class="scene" width="560" height="360"></canvas>
-        <div class="left-controls">
+
+    <div class="left-controls">
             <div class="form_answer">
                 <input type="radio" id="curve_id" value="curve" name="operation" checked>
                 <label for="curve_id" class="curve-button"></label>
@@ -38,12 +35,17 @@
                 <input type="range" id="radius_id" /><label>Radius</label>
             </div>
             <hr />
-            <input type="range" id="numCopies_id" name="vol" min="1" max="8" />
+	    <div>
+              <input type="range" id="numCopies_id" name="vol" min="1" max="8" />
+	    </div>
             <div><input type="checkbox" class="switch" id="reflection_id" /><label>Reflection</label></div>
             <input type="button" id="clear_id" value="Clear" />
-        </div>
-        <div id="output" class="status"></div>
+	    <div id="status">Status</div>
     </div>
+    <div class="canvasContainer">
+      <canvas id="canvas" class="scene"></canvas>
+    </div>
+
     <script src="./src/curves.js"></script>
     <script src="./src/mouseHandler.js"></script>
     <script src="./src/scene.js"></script>

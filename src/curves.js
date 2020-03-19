@@ -30,16 +30,16 @@ class LinearCurve {
         this.y1 += y;
     }
 
-    display(ctx) {
+    display(ctx, scale) {
         ctx.fillStyle = this.color;
-        let num_steps = dist(this.x0, this.y0, this.x1, this.y1) / 4;
+        let num_steps = dist(this.x0, this.y0, this.x1, this.y1)*scale / 4;
         for (let t = 0; t <= 1; t = t + 1 / num_steps) {
             let x = lerp(this.x0, this.x1, t);
             let y = lerp(this.y0, this.y1, t);
             let r = lerp(this.r0, this.r1, t);
 
             ctx.beginPath();
-            ctx.arc(x, y, r, 0, 2 * Math.PI);
+            ctx.arc(x * scale, y * scale, r, 0, 2 * Math.PI);
             ctx.fill();
         }
     }
@@ -70,10 +70,10 @@ class QuadraticCurve {
         this.y2 += y;
     }
 
-    display(ctx) {
+    display(ctx, scale) {
         ctx.fillStyle = this.color;
         let l = dist(this.x0, this.y0, this.x1, this.y1) + dist(this.x1, this.y1, this.x2, this.y2);
-        let num_steps = l / 4;
+        let num_steps = l * scale / 4;
         for (let t = 0; t <= 1; t = t + 1 / num_steps) {
             let f0 = pow(1 - t, 2);
             let f1 = 2 * (1 - t) * t;
@@ -83,7 +83,7 @@ class QuadraticCurve {
             let r = f0 * this.r0 + f1 * this.r1 + f2 * this.r2;
 
             ctx.beginPath();
-            ctx.arc(x, y, r, 0, 2 * Math.PI);
+            ctx.arc(x * scale, y * scale, r, 0, 2 * Math.PI);
             ctx.fill();
         }
     }
@@ -121,12 +121,12 @@ class CubicCurve {
         this.y3 += y;
     }
 
-    display(ctx) {
+    display(ctx, scale) {
         ctx.fillStyle = this.color;
         let l1 = dist(this.x0, this.y0, this.x3, this.y3);
         let l2 = dist(this.x0, this.y0, this.x1, this.y1) + dist(this.x1, this.y1, this.x2, this.y2) + dist(this.x2, this.y2, this.x3, this.y3);
         let l = (l1 + l2) / 2;
-        let num_steps = l / 2;
+        let num_steps = l*scale / 2;
         for (let t = 0; t <= 1; t = t + 1 / num_steps) {
             let f0 = Math.pow(1 - t, 3);
             let f1 = 3 * Math.pow(1 - t, 2) * t;
@@ -137,25 +137,24 @@ class CubicCurve {
             let r = f0 * this.r0 + f1 * this.r1 + f2 * this.r2 + f3 * this.r3;
 
             ctx.beginPath();
-            ctx.arc(x, y, r, 0, 2 * Math.PI);
+            ctx.arc(x * scale, y * scale, r, 0, 2 * Math.PI);
             ctx.fill();
         }
     }
 }
 
 class Circle {
-    constructor(cx, cy, radius, strokewidth, color) {
+    constructor(cx, cy, radius, strokeWidth, color) {
         this.cx = cx;
         this.cy = cy;
         this.radius = radius;
-        this.strokewidth = strokewidth;
+        this.strokeWidth = strokeWidth;
         this.color = color;
-
     }
 
-    display(ctx) {
+    display(ctx, scale) {
         ctx.beginPath();
-        ctx.arc(this.cx, this.cy, this.radius, 0, 2 * Math.PI);
-        ctx.stroke();        
+        ctx.arc(this.cx, this.cy.this.radius, 0, 2 * Math.PI);
+        ctx.stroke();
     }
 }
