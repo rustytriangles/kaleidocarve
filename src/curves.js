@@ -30,6 +30,12 @@ class LinearCurve {
         this.y1 += y;
     }
 
+    evaluate(t) {
+	return [lerp(this.x0, this.x1, t),
+		lerp(this.y0, this.y1, t),
+		lerp(this.r0, this.r1, t)];
+    }
+
     display(ctx, scale) {
         ctx.fillStyle = this.color;
         let num_steps = dist(this.x0, this.y0, this.x1, this.y1)*scale / 4;
@@ -70,14 +76,24 @@ class QuadraticCurve {
         this.y2 += y;
     }
 
+    evaluate(t) {
+        let f0 = Math.pow(1 - t, 2);
+        let f1 = 2 * (1 - t) * t;
+        let f2 = Math.pow(t, 2);
+        let x = f0 * this.x0 + f1 * this.x1 + f2 * this.x2;
+        let y = f0 * this.y0 + f1 * this.y1 + f2 * this.y2;
+        let r = f0 * this.r0 + f1 * this.r1 + f2 * this.r2;
+	return [x, y, r];
+    }
+
     display(ctx, scale) {
         ctx.fillStyle = this.color;
         let l = dist(this.x0, this.y0, this.x1, this.y1) + dist(this.x1, this.y1, this.x2, this.y2);
         let num_steps = l * scale / 4;
         for (let t = 0; t <= 1; t = t + 1 / num_steps) {
-            let f0 = pow(1 - t, 2);
+            let f0 = Math.pow(1 - t, 2);
             let f1 = 2 * (1 - t) * t;
-            let f2 = pow(t, 2);
+            let f2 = Math.pow(t, 2);
             let x = f0 * this.x0 + f1 * this.x1 + f2 * this.x2;
             let y = f0 * this.y0 + f1 * this.y1 + f2 * this.y2;
             let r = f0 * this.r0 + f1 * this.r1 + f2 * this.r2;
@@ -121,6 +137,18 @@ class CubicCurve {
         this.y3 += y;
     }
 
+    evaluate(t) {
+        let f0 = Math.pow(1 - t, 3);
+        let f1 = 3 * Math.pow(1 - t, 2) * t;
+        let f2 = 3 * (1 - t) * Math.pow(t, 2);
+        let f3 = Math.pow(t, 3);
+        let x = f0 * this.x0 + f1 * this.x1 + f2 * this.x2 + f3 * this.x3;
+        let y = f0 * this.y0 + f1 * this.y1 + f2 * this.y2 + f3 * this.y3;
+        let r = f0 * this.r0 + f1 * this.r1 + f2 * this.r2 + f3 * this.r3;
+
+	return [x, y, r];
+    }
+
     display(ctx, scale) {
         ctx.fillStyle = this.color;
         let l1 = dist(this.x0, this.y0, this.x3, this.y3);
@@ -128,16 +156,9 @@ class CubicCurve {
         let l = (l1 + l2) / 2;
         let num_steps = l*scale / 2;
         for (let t = 0; t <= 1; t = t + 1 / num_steps) {
-            let f0 = Math.pow(1 - t, 3);
-            let f1 = 3 * Math.pow(1 - t, 2) * t;
-            let f2 = 3 * (1 - t) * Math.pow(t, 2);
-            let f3 = Math.pow(t, 3);
-            let x = f0 * this.x0 + f1 * this.x1 + f2 * this.x2 + f3 * this.x3;
-            let y = f0 * this.y0 + f1 * this.y1 + f2 * this.y2 + f3 * this.y3;
-            let r = f0 * this.r0 + f1 * this.r1 + f2 * this.r2 + f3 * this.r3;
-
+	    let p = this.evaluate(t);
             ctx.beginPath();
-            ctx.arc(x * scale, y * scale, r, 0, 2 * Math.PI);
+            ctx.arc(p[0] * scale, p[1] * scale, p[2], 0, 2 * Math.PI);
             ctx.fill();
         }
     }
@@ -154,7 +175,9 @@ class Circle {
 
     display(ctx, scale) {
         ctx.beginPath();
-        ctx.arc(this.cx, this.cy.this.radius, 0, 2 * Math.PI);
+        ctx.arc(0, 0, this.radius * scale, 0, 2 * Math.PI);
         ctx.stroke();
     }
 }
+
+module.exports = {LinearCurve, QuadraticCurve, CubicCurve, Circle};

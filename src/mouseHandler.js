@@ -121,8 +121,8 @@ class MouseHandler {
         if (this.x.length >= 1 && this.y.length > 1) {
             let x = this.x[this.x.length - 1];
             let y = this.y[this.y.length - 1];
-            let r = dist(width / 2, height / 2, x, y);
-            return new Circle(width / 2, height / 2, r, 2, color);
+            let r = dist(0, 0, x, y);
+            return new Circle(0, 0, r, 2, color);
         }
     }
 
@@ -133,7 +133,7 @@ class MouseHandler {
                 var scale = Math.max(width, height) / 2;
                 var pt = toDC(this.x[0], this.y[0], scale, width, height);
                 ctx.moveTo(pt[0], pt[1]);
-                for (let i = 0; i < this.x.length; i++) {
+                for (let i = 1; i < this.x.length; i++) {
                     pt = toDC(this.x[i], this.y[i], scale, width, height);
                     ctx.lineTo(pt[0], pt[1]);
                 }
@@ -149,3 +149,5 @@ class MouseHandler {
         this.y = [];
     }
 }
+
+module.exports = {MouseHandler};
