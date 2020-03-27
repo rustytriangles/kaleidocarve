@@ -35,7 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
         var ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         scene.display(ctx, rect.width, rect.height);
-        mouseHandler.display(ctx, rect.width, rect.height);
+        handler.display(ctx, rect.width, rect.height);
 
         window.requestAnimationFrame(renderLoop);
     }
