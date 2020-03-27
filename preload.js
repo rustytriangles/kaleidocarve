@@ -1,4 +1,5 @@
 ﻿// Kaleidocurves © 2020 RustyTriangles LLC
+var mh = require('./src/mouseHandler');
 
 window.addEventListener('DOMContentLoaded', () => {
     const replaceText = (selector, text) => {
@@ -11,7 +12,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     var canvas = document.getElementById('canvas');
 
-    var handler = new MouseHandler();
+    var handler = new mh.MouseHandler();
     var scene = new Scene(numCopies);
 
     function updateStatus(str) {
@@ -34,6 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
         var ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         scene.display(ctx, rect.width, rect.height);
+        mouseHandler.display(ctx, rect.width, rect.height);
 
         window.requestAnimationFrame(renderLoop);
     }
@@ -54,9 +56,12 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     canvas.addEventListener('mouseup', (evt) => {
+	updateStatus('mouseup');
         handler.stop();
         if (handler.valid()) {
+	    updateStatus('handler.valid');
             if (handler.getMode() == "draw_curve") {
+		updateStatus('draw_curve');
 
                 const strokeColor = document.getElementById('strokeColor_id');
                 var c = handler.createCurve(strokeColor.value);
@@ -64,20 +69,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 scene.addCurve(c);
 
-                var ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                scene.display(ctx, rect.width, rect.height);
+		window.requestAnimationFrame(renderLoop);
 
             } else if (handler.getMode() == "draw_circle") {
+		updateStatus('draw_circle');
+
                 const strokeColor = document.getElementById('strokeColor_id');
+		updateStatus('strokeColor = ' + strokeColor);
                 var c = handler.createCircle(canvas.width, canvas.height, strokeColor.value);
-                const rect = canvas.getBoundingClientRect();
+		updateStatus('c = ' + c);
 
                 scene.addCurve(c);
 
-                var ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                scene.display(ctx, rect.width, rect.height);
+		window.requestAnimationFrame(renderLoop);
             }
             handler.clear();
         }
@@ -97,18 +101,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
     numCopiesRange.addEventListener('change', (evt) => {
         scene.setNumCopies(numCopiesRange.value);
-
-        var ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        scene.display(ctx, canvas.width, canvas.height);
+	window.requestAnimationFrame(renderLoop);
     });
 
     document.getElementById('clear_id').addEventListener('click', (evt) => {
         scene.clear();
-
-        var ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        scene.display(ctx, canvas.width, canvas.height);
+	window.requestAnimationFrame(renderLoop);
     });
 
     document.getElementById('curve_id').addEventListener('click', (evt) => {
@@ -116,15 +114,13 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('circle_id').addEventListener('click', (evt) => {
+	updateStatus('setMode draw_circle');
         handler.setMode('draw_circle');
     });
 
     document.getElementById('reflection_id').addEventListener('change', (evt) => {
         scene.setReflection(evt.target.checked);
-
-        var ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        scene.display(ctx, canvas.width, canvas.height);
+	window.requestAnimationFrame(renderLoop);
     });
 
     window.requestAnimationFrame(renderLoop);

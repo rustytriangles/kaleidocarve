@@ -1,6 +1,7 @@
 ﻿// Kaleidocurves © 2020 RustyTriangles LLC
+var curves = require('../src/curves');
 
-function dist(x0, x1, y0, y1) {
+function dist(x0, y0, x1, y1) {
     return Math.sqrt(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2));
 }
 
@@ -37,14 +38,6 @@ class MouseHandler {
             this.x[this.x.length] = x;
             this.y[this.y.length] = y;
         }
-    }
-
-    contents() {
-        var result = '';
-        for (let i = 0; i < this.x.length; i++) {
-            result = result + this.x[i] + ',' + this.y[i] + ' ';
-        }
-        return result;
     }
 
     valid() {
@@ -97,7 +90,7 @@ class MouseHandler {
             let r1 = 2;
             let r2 = 4;
             let r3 = 2;
-            return new CubicCurve(x0, y0, r0,
+            return new curves.CubicCurve(x0, y0, r0,
                 x1, y1, r1,
                 x2, y2, r2,
                 x3, y3, r3,
@@ -113,22 +106,23 @@ class MouseHandler {
 
             let r0 = 0;
             let r1 = 2;
-            return new LinearCurve(x0, y0, r0, x1, y1, r1, color);
+            return new curves.LinearCurve(x0, y0, r0, x1, y1, r1, color);
         }
     }
 
     createCircle(width, height, color) {
-        if (this.x.length >= 1 && this.y.length > 1) {
+        if (this.x.length >= 1 && this.y.length >= 1) {
             let x = this.x[this.x.length - 1];
             let y = this.y[this.y.length - 1];
             let r = dist(0, 0, x, y);
-            return new Circle(0, 0, r, 2, color);
+            return new curves.Circle(0, 0, r, 2, color);
         }
     }
 
     display(ctx, width, height) {
         if (this.mode == 'draw_curve') {
             if (this.x.length > 1) {
+//		ctx.save();
                 ctx.beginPath();
                 var scale = Math.max(width, height) / 2;
                 var pt = toDC(this.x[0], this.y[0], scale, width, height);
@@ -138,6 +132,7 @@ class MouseHandler {
                     ctx.lineTo(pt[0], pt[1]);
                 }
                 ctx.stroke();
+//		ctx.restore();
             }
         } else if (this.mode == 'draw_circle') {
 

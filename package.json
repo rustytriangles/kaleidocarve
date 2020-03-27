@@ -1,18 +1,18 @@
 {
-    "name": "kaleidocarve",
-    "version": "0.0.0",
-    "description": "kaleidocarve",
-    "main": "main.js",
-    "author": {
-        "name": ""
-    },
-    "scripts": {
-        "start": "electron .",
-        "test": "mocha"
-    },
-    "dependencies": {
-        "electron": "^8.1.1",
-        "mocha": "^7.1.1",
-        "scss": "^0.2.4"
-    }
+  "name": "kaleidocarve",
+  "version": "0.0.0",
+  "description": "kaleidocarve",
+  "main": "main.js",
+  "author": {
+    "name": ""
+  },
+  "scripts": {
+    "start": "electron .",
+    "test": "mocha"
+  },
+  "dependencies": {
+    "chai": "^4.2.0",
+    "electron": "^8.1.1",
+    "scss": "^0.2.4"
+  }
 }

@@ -173,6 +173,10 @@ class Circle {
         this.color = color;
     }
 
+    getRadius() {
+	return this.radius;
+    }
+
     display(ctx, scale) {
         ctx.beginPath();
         ctx.arc(0, 0, this.radius * scale, 0, 2 * Math.PI);
