@@ -1,28 +1,9 @@
+﻿// Kaleidocurves © 2020 RustyTriangles LLC
+
 var chai = require('chai');
 var assert = chai.assert;
 var curves = require('../src/curves');
 var mh = require('../src/mouseHandler');
-
-// assert functions
-//  AssertionError
-//  deepEqual
-//  deepStrictEqual
-//  doesNotMatch
-//  doesNotReject
-//  doesNotThrow
-//  equal
-//  fail
-//  ifError
-//  match
-//  notDeepEqual
-//  notDeepStrictEqual
-//  notEqual
-//  notStrictEqual
-//  ok
-//  rejects
-//  strict
-//  strictEqual
-//  throws
 
 describe('MouseHandler/mode', function() {
 

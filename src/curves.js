@@ -31,14 +31,14 @@ class LinearCurve {
     }
 
     evaluate(t) {
-	return [lerp(this.x0, this.x1, t),
-		lerp(this.y0, this.y1, t),
-		lerp(this.r0, this.r1, t)];
+        return [lerp(this.x0, this.x1, t),
+        lerp(this.y0, this.y1, t),
+        lerp(this.r0, this.r1, t)];
     }
 
     display(ctx, scale) {
         ctx.fillStyle = this.color;
-        let num_steps = dist(this.x0, this.y0, this.x1, this.y1)*scale / 4;
+        let num_steps = dist(this.x0, this.y0, this.x1, this.y1) * scale / 4;
         for (let t = 0; t <= 1; t = t + 1 / num_steps) {
             let x = lerp(this.x0, this.x1, t);
             let y = lerp(this.y0, this.y1, t);
@@ -83,7 +83,7 @@ class QuadraticCurve {
         let x = f0 * this.x0 + f1 * this.x1 + f2 * this.x2;
         let y = f0 * this.y0 + f1 * this.y1 + f2 * this.y2;
         let r = f0 * this.r0 + f1 * this.r1 + f2 * this.r2;
-	return [x, y, r];
+        return [x, y, r];
     }
 
     display(ctx, scale) {
@@ -146,7 +146,7 @@ class CubicCurve {
         let y = f0 * this.y0 + f1 * this.y1 + f2 * this.y2 + f3 * this.y3;
         let r = f0 * this.r0 + f1 * this.r1 + f2 * this.r2 + f3 * this.r3;
 
-	return [x, y, r];
+        return [x, y, r];
     }
 
     display(ctx, scale) {
@@ -154,9 +154,9 @@ class CubicCurve {
         let l1 = dist(this.x0, this.y0, this.x3, this.y3);
         let l2 = dist(this.x0, this.y0, this.x1, this.y1) + dist(this.x1, this.y1, this.x2, this.y2) + dist(this.x2, this.y2, this.x3, this.y3);
         let l = (l1 + l2) / 2;
-        let num_steps = l*scale / 2;
+        let num_steps = l * scale / 2;
         for (let t = 0; t <= 1; t = t + 1 / num_steps) {
-	    let p = this.evaluate(t);
+            let p = this.evaluate(t);
             ctx.beginPath();
             ctx.arc(p[0] * scale, p[1] * scale, p[2], 0, 2 * Math.PI);
             ctx.fill();
@@ -174,7 +174,7 @@ class Circle {
     }
 
     getRadius() {
-	return this.radius;
+        return this.radius;
     }
 
     display(ctx, scale) {
@@ -184,4 +184,4 @@ class Circle {
     }
 }
 
-module.exports = {LinearCurve, QuadraticCurve, CubicCurve, Circle};
+module.exports = { LinearCurve, QuadraticCurve, CubicCurve, Circle };

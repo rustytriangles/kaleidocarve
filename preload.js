@@ -56,12 +56,12 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     canvas.addEventListener('mouseup', (evt) => {
-	updateStatus('mouseup');
+        updateStatus('mouseup');
         handler.stop();
         if (handler.valid()) {
-	    updateStatus('handler.valid');
+            updateStatus('handler.valid');
             if (handler.getMode() == "draw_curve") {
-		updateStatus('draw_curve');
+                updateStatus('draw_curve');
 
                 const strokeColor = document.getElementById('strokeColor_id');
                 var c = handler.createCurve(strokeColor.value);
@@ -69,19 +69,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 scene.addCurve(c);
 
-		window.requestAnimationFrame(renderLoop);
+                window.requestAnimationFrame(renderLoop);
 
             } else if (handler.getMode() == "draw_circle") {
-		updateStatus('draw_circle');
+                updateStatus('draw_circle');
 
                 const strokeColor = document.getElementById('strokeColor_id');
-		updateStatus('strokeColor = ' + strokeColor);
+                updateStatus('strokeColor = ' + strokeColor);
                 var c = handler.createCircle(canvas.width, canvas.height, strokeColor.value);
-		updateStatus('c = ' + c);
+                updateStatus('c = ' + c);
 
                 scene.addCurve(c);
 
-		window.requestAnimationFrame(renderLoop);
+                window.requestAnimationFrame(renderLoop);
             }
             handler.clear();
         }
@@ -101,12 +101,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
     numCopiesRange.addEventListener('change', (evt) => {
         scene.setNumCopies(numCopiesRange.value);
-	window.requestAnimationFrame(renderLoop);
+        window.requestAnimationFrame(renderLoop);
     });
 
     document.getElementById('clear_id').addEventListener('click', (evt) => {
         scene.clear();
-	window.requestAnimationFrame(renderLoop);
+        window.requestAnimationFrame(renderLoop);
     });
 
     document.getElementById('curve_id').addEventListener('click', (evt) => {
@@ -114,13 +114,13 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('circle_id').addEventListener('click', (evt) => {
-	updateStatus('setMode draw_circle');
+        updateStatus('setMode draw_circle');
         handler.setMode('draw_circle');
     });
 
     document.getElementById('reflection_id').addEventListener('change', (evt) => {
         scene.setReflection(evt.target.checked);
-	window.requestAnimationFrame(renderLoop);
+        window.requestAnimationFrame(renderLoop);
     });
 
     window.requestAnimationFrame(renderLoop);

@@ -3,7 +3,7 @@
 class Scene {
     constructor(numCopies) {
         this.numCopies = numCopies;
-	this.reflection = false;
+        this.reflection = false;
         this.curves = [];
     }
 
@@ -16,7 +16,7 @@ class Scene {
     }
 
     setReflection(newValue) {
-	this.reflection = newValue;
+        this.reflection = newValue;
     }
 
     clear() {
@@ -24,7 +24,7 @@ class Scene {
     }
 
     display(ctx, width, height) {
-	var scale = Math.max(width, height) / 2;
+        var scale = Math.max(width, height) / 2;
 
         let step = 2.0 * Math.PI / this.numCopies;
         for (let i = 0; i < this.curves.length; i++) {
@@ -41,20 +41,20 @@ class Scene {
             }
             ctx.restore();
 
-	    if (this.reflection) {
-		ctx.save();
-		ctx.translate(width / 2, height / 2);
-		ctx.scale(-1,1);
+            if (this.reflection) {
+                ctx.save();
+                ctx.translate(width / 2, height / 2);
+                ctx.scale(-1, 1);
 
-		for (let j = 0; j < this.numCopies; j++) {
+                for (let j = 0; j < this.numCopies; j++) {
                     let c = Math.cos(step);
                     let s = Math.sin(step);
 
                     ctx.rotate(step);
                     this.curves[i].display(ctx, scale);
-		}
-		ctx.restore();
-	    }
+                }
+                ctx.restore();
+            }
         }
     }
 }

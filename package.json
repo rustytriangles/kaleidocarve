@@ -13,6 +13,7 @@
   "dependencies": {
     "chai": "^4.2.0",
     "electron": "^8.1.1",
+    "mocha": "^7.1.1",
     "scss": "^0.2.4"
   }
 }

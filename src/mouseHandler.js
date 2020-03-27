@@ -122,7 +122,6 @@ class MouseHandler {
     display(ctx, width, height) {
         if (this.mode == 'draw_curve') {
             if (this.x.length > 1) {
-//		ctx.save();
                 ctx.beginPath();
                 var scale = Math.max(width, height) / 2;
                 var pt = toDC(this.x[0], this.y[0], scale, width, height);
@@ -132,7 +131,6 @@ class MouseHandler {
                     ctx.lineTo(pt[0], pt[1]);
                 }
                 ctx.stroke();
-//		ctx.restore();
             }
         } else if (this.mode == 'draw_circle') {
 
@@ -145,4 +143,4 @@ class MouseHandler {
     }
 }
 
-module.exports = {MouseHandler};
+module.exports = { MouseHandler };
