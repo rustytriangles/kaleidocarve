@@ -1,13 +1,6 @@
 ﻿// Kaleidocurves © 2020 RustyTriangles LLC
 var curves = require('../src/curves');
-
-function dist(x0, y0, x1, y1) {
-    return Math.sqrt(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2));
-}
-
-function toDC(x, y, s, w, h) {
-    return [x * s + w / 2, y * s + h / 2];
-}
+var util = require('../src/util');
 
 class MouseHandler {
     constructor() {
@@ -49,19 +42,19 @@ class MouseHandler {
             let d = [];
             d[0] = 0;
             for (let i = 1; i < this.x.length; i++) {
-                d[i] = d[i - 1] + dist(this.x[i - 1], this.y[i - 1], this.x[i], this.y[i]);
+                d[i] = d[i - 1] + util.dist(this.x[i - 1], this.y[i - 1], this.x[i], this.y[i]);
             }
 
-            let x0 = this.x[0];
-            let y0 = this.y[0];
+            const x0 = this.x[0];
+            const y0 = this.y[0];
 
-            let x3 = this.x[this.x.length - 1];
-            let y3 = this.y[this.y.length - 1];
+            const x3 = this.x[this.x.length - 1];
+            const y3 = this.y[this.y.length - 1];
 
-            let da = d[d.length - 1] / 3;
+            const da = d[d.length - 1] / 3;
             let xa = x0;
             let ya = y0;
-            let db = 2 * d[d.length - 1] / 3;
+            const db = 2 * d[d.length - 1] / 3;
             let xb = x0;
             let yb = y0;
 
@@ -76,20 +69,20 @@ class MouseHandler {
                 }
             }
 
-            let xq = 27 * xa - 8 * x0 - x3;
-            let yq = 27 * ya - 8 * y0 - y3;
-            let xr = 27 * xb - x0 - 8 * x3;
-            let yr = 27 * yb - y0 - 8 * y3;
+            const xq = 27 * xa - 8 * x0 - x3;
+            const yq = 27 * ya - 8 * y0 - y3;
+            const xr = 27 * xb - x0 - 8 * x3;
+            const yr = 27 * yb - y0 - 8 * y3;
 
-            let x1 = (2 * xq - xr) / 18;
-            let y1 = (2 * yq - yr) / 18;
-            let x2 = (2 * xr - xq) / 18;
-            let y2 = (2 * yr - yq) / 18;
+            const x1 = (2 * xq - xr) / 18;
+            const y1 = (2 * yq - yr) / 18;
+            const x2 = (2 * xr - xq) / 18;
+            const y2 = (2 * yr - yq) / 18;
 
-            let r0 = 0;
-            let r1 = 2;
-            let r2 = 4;
-            let r3 = 2;
+            const r0 = 0;
+            const r1 = 2;
+            const r2 = 4;
+            const r3 = 2;
             return new curves.CubicCurve(x0, y0, r0,
                 x1, y1, r1,
                 x2, y2, r2,
@@ -98,24 +91,24 @@ class MouseHandler {
 
         } else {
 
-            let x0 = this.x[0];
-            let y0 = this.y[0];
+            const x0 = this.x[0];
+            const y0 = this.y[0];
 
-            let x1 = this.x[this.x.length - 1];
-            let y1 = this.y[this.y.length - 1];
+            const x1 = this.x[this.x.length - 1];
+            const y1 = this.y[this.y.length - 1];
 
-            let r0 = 0;
-            let r1 = 2;
+            const r0 = 0;
+            const r1 = 2;
             return new curves.LinearCurve(x0, y0, r0, x1, y1, r1, color);
         }
     }
 
     createCircle(width, height, color) {
         if (this.x.length >= 1 && this.y.length >= 1) {
-            let x = this.x[this.x.length - 1];
-            let y = this.y[this.y.length - 1];
-            let r = dist(0, 0, x, y);
-            return new curves.Circle(0, 0, r, 2, color);
+            const x = this.x[this.x.length - 1];
+            const y = this.y[this.y.length - 1];
+            const r = util.dist(0, 0, x, y);
+            return new curves.Circle(0, 0, r, 4, color);
         }
     }
 
@@ -124,16 +117,24 @@ class MouseHandler {
             if (this.x.length > 1) {
                 ctx.beginPath();
                 var scale = Math.max(width, height) / 2;
-                var pt = toDC(this.x[0], this.y[0], scale, width, height);
+                var pt = util.toDC(this.x[0], this.y[0], scale, width, height);
                 ctx.moveTo(pt[0], pt[1]);
                 for (let i = 1; i < this.x.length; i++) {
-                    pt = toDC(this.x[i], this.y[i], scale, width, height);
+                    pt = util.toDC(this.x[i], this.y[i], scale, width, height);
                     ctx.lineTo(pt[0], pt[1]);
                 }
                 ctx.stroke();
             }
         } else if (this.mode == 'draw_circle') {
-
+	    if (this.x.length >= 1) {
+		let x = this.x[this.x.length - 1];
+		let y = this.y[this.y.length - 1];
+		let r = dist(0, 0, x, y);
+                var scale = Math.max(width, height) / 2;
+		ctx.beginPath();
+		ctx.arc(width/2,height/2,r * scale,0,2*Math.PI);
+		ctx.stroke();
+	    }
         }
     }
 

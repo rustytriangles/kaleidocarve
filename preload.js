@@ -1,5 +1,7 @@
 ﻿// Kaleidocurves © 2020 RustyTriangles LLC
 var mh = require('./src/mouseHandler');
+var sh = require('./src/selectionHandler');
+var util = require('./src/util');
 
 window.addEventListener('DOMContentLoaded', () => {
     const replaceText = (selector, text) => {
@@ -12,7 +14,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     var canvas = document.getElementById('canvas');
 
-    var handler = new mh.MouseHandler();
+    var mouseHandler = new mh.MouseHandler();
+    var selectionHandler = new sh.SelectionHandler();
     var scene = new Scene(numCopies);
 
     function updateStatus(str) {
@@ -20,6 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
         statusElement.innerHTML = str;
     }
 
+    var paused = true;
     var savedWidth = -1;
     var savedHeight = -1;
     function renderLoop() {
@@ -32,71 +36,107 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         const rect = canvas.getBoundingClientRect();
-        var ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         scene.display(ctx, rect.width, rect.height);
-        handler.display(ctx, rect.width, rect.height);
+	scene.highlight(ctx, selectionHandler.getSelection(), canvas.width, canvas.height);
+        mouseHandler.display(ctx, rect.width, rect.height);
 
-        window.requestAnimationFrame(renderLoop);
-    }
-
-    function toNDC(canvas, xdc, ydc) {
-        const rect = canvas.getBoundingClientRect();
-        var w = Math.max(rect.width, rect.height) / 2;
-        var cx = (rect.left + rect.right) / 2;
-        var cy = (rect.top + rect.bottom) / 2;
-        return [(xdc - cx) / w, (ydc - cy) / w];
+	if (!paused) {
+            window.requestAnimationFrame(renderLoop);
+	}
     }
 
     canvas.addEventListener('mousedown', (evt) => {
+        const pt = util.toNDC(canvas, evt.clientX, evt.clientY);
 
-        var pt = toNDC(canvas, evt.clientX, evt.clientY);
+        if (mouseHandler.getMode() == "draw_curve") {
+	    paused = true;
+	}
 
-        handler.start(pt[0], pt[1]);
+	if (mouseHandler.getMode() == "select_object") {
+            updateStatus('select_object');
+
+	    let done = false;
+	    let changed = false;
+
+	    // First, check if we've picked the current
+	    let i = selectionHandler.getSelection();
+	    if (i && i >= 0 && i < scene.getNumCurves()) {
+		if (scene.hittest(pt[0], pt[1], i)) {
+		    updateStatus('picked already selected ' + i);
+		    done = true;
+		}
+	    }
+
+	    if (!done) {
+		const i = scene.pick(pt[0],pt[1]);
+		if (typeof i == 'number') {
+		    updateStatus('picked ' + i);
+		    selectionHandler.replace(i);
+		    changed = true;
+		} else {
+		    updateStatus('picked nothing');
+		    if (getSelection()) {
+			selectionHandler.clear();
+			changed = true;
+		    }
+		}
+	    }
+
+	    if (changed) {
+                window.requestAnimationFrame(renderLoop);
+	    }
+
+	} else {
+            mouseHandler.start(pt[0], pt[1]);
+	}
     });
 
     canvas.addEventListener('mouseup', (evt) => {
-        updateStatus('mouseup');
-        handler.stop();
-        if (handler.valid()) {
-            updateStatus('handler.valid');
-            if (handler.getMode() == "draw_curve") {
+	paused = false;
+        mouseHandler.stop();
+        if (mouseHandler.valid()) {
+            updateStatus('mouseHandler.valid');
+            if (mouseHandler.getMode() == "draw_curve") {
                 updateStatus('draw_curve');
 
                 const strokeColor = document.getElementById('strokeColor_id');
-                var c = handler.createCurve(strokeColor.value);
+                const c = mouseHandler.createCurve(strokeColor.value);
                 const rect = canvas.getBoundingClientRect();
 
                 scene.addCurve(c);
 
                 window.requestAnimationFrame(renderLoop);
 
-            } else if (handler.getMode() == "draw_circle") {
+            } else if (mouseHandler.getMode() == "draw_circle") {
                 updateStatus('draw_circle');
 
                 const strokeColor = document.getElementById('strokeColor_id');
                 updateStatus('strokeColor = ' + strokeColor);
-                var c = handler.createCircle(canvas.width, canvas.height, strokeColor.value);
+                const c = mouseHandler.createCircle(canvas.width, canvas.height, strokeColor.value);
                 updateStatus('c = ' + c);
 
                 scene.addCurve(c);
 
                 window.requestAnimationFrame(renderLoop);
             }
-            handler.clear();
+
+            mouseHandler.clear();
         }
     });
 
     canvas.addEventListener('mouseleave', (evt) => {
-        handler.stop();
-        handler.clear();
+	paused = false;
+        mouseHandler.stop();
+        mouseHandler.clear();
+        window.requestAnimationFrame(renderLoop);
     });
 
     canvas.addEventListener('mousemove', (evt) => {
-        var pt = toNDC(canvas, evt.clientX, evt.clientY);
-
-        handler.addPoint(pt[0], pt[1]);
-        handler.display(canvas.getContext('2d'), savedWidth, savedHeight);
+        const pt = util.toNDC(canvas, evt.clientX, evt.clientY);
+        mouseHandler.addPoint(pt[0], pt[1]);
+        mouseHandler.display(canvas.getContext('2d'), savedWidth, savedHeight);
     });
 
     numCopiesRange.addEventListener('change', (evt) => {
@@ -110,12 +150,17 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('curve_id').addEventListener('click', (evt) => {
-        handler.setMode('draw_curve');
+        mouseHandler.setMode('draw_curve');
     });
 
     document.getElementById('circle_id').addEventListener('click', (evt) => {
         updateStatus('setMode draw_circle');
-        handler.setMode('draw_circle');
+        mouseHandler.setMode('draw_circle');
+    });
+
+    document.getElementById('selobj_id').addEventListener('click', (evt) => {
+        updateStatus('setMode select_object');
+        mouseHandler.setMode('select_object');
     });
 
     document.getElementById('reflection_id').addEventListener('change', (evt) => {
@@ -123,5 +168,6 @@ window.addEventListener('DOMContentLoaded', () => {
         window.requestAnimationFrame(renderLoop);
     });
 
+    paused = false;
     window.requestAnimationFrame(renderLoop);
 })

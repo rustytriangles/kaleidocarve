@@ -8,12 +8,12 @@ var mh = require('../src/mouseHandler');
 describe('MouseHandler/mode', function() {
 
     it('Initial value', function() {
-	var m = new mh.MouseHandler();
+	let m = new mh.MouseHandler();
 	assert.equal(m.getMode(), 'draw_curve');
     });
 
     it('After setMode', function() {
-	var m = new mh.MouseHandler();
+	let m = new mh.MouseHandler();
 	m.setMode('draw_circle');
 	assert.equal(m.getMode(), 'draw_circle');
 	m.setMode('draw_curve');
@@ -25,12 +25,12 @@ describe('MouseHandler/mode', function() {
 describe('MouseHandler/valid', function() {
 
     it('Initial value', function() {
-	var m = new mh.MouseHandler();
+	let m = new mh.MouseHandler();
 	assert.equal(m.valid(), false);
     });
 
     it('Without calling start', function() {
-	var m = new mh.MouseHandler();
+	let m = new mh.MouseHandler();
 
 	m.addPoint(1,2);
 	m.addPoint(3,4);
@@ -39,7 +39,7 @@ describe('MouseHandler/valid', function() {
     });
 
     it('One point', function() {
-	var m = new mh.MouseHandler();
+	let m = new mh.MouseHandler();
 
 	m.start();
 
@@ -49,7 +49,7 @@ describe('MouseHandler/valid', function() {
     });
 
     it('Two points', function() {
-	var m = new mh.MouseHandler();
+	let m = new mh.MouseHandler();
 
 	m.start();
 
@@ -63,7 +63,7 @@ describe('MouseHandler/valid', function() {
 describe('MouseHandler/createCurve', function() {
 
     it('Two points', function() {
-	var m = new mh.MouseHandler();
+	let m = new mh.MouseHandler();
 
 	m.start();
 
@@ -72,14 +72,18 @@ describe('MouseHandler/createCurve', function() {
 	m.addPoint(startPoint[0], startPoint[1]);
 	m.addPoint(endPoint[0], endPoint[1]);
 
-	var c = m.createCurve('#00ff00');
+	const c = m.createCurve('#00ff00');
 	assert.instanceOf(c, curves.LinearCurve);
+
 	assert.deepEqual(c.evaluate(0), [startPoint, 0].flat());
 	assert.deepEqual(c.evaluate(1), [endPoint, 2].flat());
+
+	const expectedMidPoint = [(5+7)/2, (6+8)/2, 1];
+	assert.deepEqual(c.evaluate(0.5), expectedMidPoint);
     });
 
     it('Four points', function() {
-	var m = new mh.MouseHandler();
+	let m = new mh.MouseHandler();
 
 	m.start();
 
@@ -90,21 +94,25 @@ describe('MouseHandler/createCurve', function() {
 	m.addPoint(5, 6);
 	m.addPoint(endPoint[0], endPoint[1]);
 
-	var c = m.createCurve('#00ff00');
+	const c = m.createCurve('#00ff00');
 	assert.instanceOf(c, curves.CubicCurve);
+
 	assert.deepEqual(c.evaluate(0), [startPoint, 0].flat());
 	assert.deepEqual(c.evaluate(1), [endPoint, 2].flat());
+
+	const expectedMidPoint = [(1+3*3+3*5+7)/8, (2+3*4+3*6+8)/8, 2.5];
+	assert.deepEqual(c.evaluate(0.5), expectedMidPoint);
     });
 });
 
 describe('MouseHandler/createCircle', function() {
 
-    var m = new mh.MouseHandler();
+    let m = new mh.MouseHandler();
 
     m.start();
     m.addPoint(3, 4);
-    var c = m.createCircle('#00ff00');
+    const c = m.createCircle('#00ff00');
     assert.instanceOf(c, curves.Circle);
-    assert.equal(c.getRadius(), 5);
 
+    assert.equal(c.getRadius(), 5);
 });
