@@ -18,16 +18,43 @@ class Scene {
     }
 
     hittest(x, y, index) {
+	const transform = undefined;
         if (index >= 0 && index < this.curves.length) {
-            return this.curves[index].hittest(x,y);
+            return this.curves[index].hittest(x,y, transform);
+        }
+        return false;
+    }
+
+    hittestControlPoints(x, y, r) {
+	const transform = undefined;
+	const index = r[0];
+        if (index >= 0 && index < this.curves.length) {
+            const e = this.curves[index].hittestControlPoints(x,y, transform);
+	    if (e && r[0] == e[1]) {
+		return true;
+	    }
         }
         return false;
     }
 
     pick(x,y) {
+	const t = new trns.Transformation(this.numCopies, this.reflection);
+
         for (let i = 0; i < this.curves.length; i++) {
-            if (this.curves[i].hittest(x,y)) {
+            if (this.curves[i].hittest(x,y, t)) {
                 return i;
+            }
+        }
+        return undefined;
+    }
+
+    pickControlPoint(x,y) {
+	const t = new trns.Transformation(this.numCopies, this.reflection);
+
+        for (let i = 0; i < this.curves.length; i++) {
+	    const r = this.curves[i].hittestControlPoints(x,y, t);
+            if (r) {
+                return [i, r];
             }
         }
         return undefined;
@@ -77,9 +104,18 @@ class Scene {
     }
 
     highlight(ctx, selection, width, height) {
-        if (typeof selection == 'number' && selection >= 0 && selection < this.curves.length) {
+	let curveIndex = -1;
+	let controlPointIndex = undefined;
+	if (typeof selection == 'object' && selection.length == 2) {
+	    curveIndex = selection[0];
+	    controlPointIndex = selection[1];
+	} else if (typeof selection == 'number') {
+	    curveIndex = selection;
+	}
 
-            const c = this.curves[selection];
+        if (curveIndex >= 0 && curveIndex < this.curves.length) {
+
+            const c = this.curves[curveIndex];
             const t = new trns.Transformation(this.numCopies, this.reflection);
 
             ctx.save();
@@ -97,7 +133,7 @@ class Scene {
                                      result.value[2], result.value[3],
                                      width / 2,
                                      height / 2);
-                    c.highlight(ctx, scale);
+                    c.highlight(ctx, scale, controlPointIndex);
 
                     result = it.next();
                 }

@@ -10,10 +10,12 @@ function lerp(a, b, t) {
     return (1 - t) * a + t * b;
 }
 
+// Return dot product of two vectors
 function dot(x0, y0, x1, y1) {
     return x0*x1 + y0*y1;
 }
 
+// Return true if [px,py] is on the line segment from [x0,y0] to [x1,y1]
 function hitLine(px, py, x0, y0, x1, y1) {
     const tolerance = 0.03;
 
@@ -47,6 +49,13 @@ function toDC(x, y, s, w, h) {
     return [x * s + w / 2, y * s + h / 2];
 }
 
+// Return [x, y] transformed by mat
+function transformPoint(x, y, mat) {
+    const xNew = x*mat[0] + y*mat[2] + mat[4];
+    const yNew = x*mat[1] + y*mat[3] + mat[5];
+    return [xNew, yNew];
+}
+
 // Convert point from device to normalized
 // @todo Change interface to make testing cleaner
 function toNDC(canvas, xdc, ydc) {
@@ -57,4 +66,4 @@ function toNDC(canvas, xdc, ydc) {
     return [(xdc - cx) / w, (ydc - cy) / w];
 }
 
-module.exports = {dist, hitLine, lerp, toDC, toNDC};
+module.exports = {dist, hitLine, lerp, toDC, toNDC, transformPoint};
