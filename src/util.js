@@ -10,10 +10,12 @@ function lerp(a, b, t) {
     return (1 - t) * a + t * b;
 }
 
+// Return dot product of two vectors
 function dot(x0, y0, x1, y1) {
     return x0*x1 + y0*y1;
 }
 
+// Return true if [px,py] is on the line segment from [x0,y0] to [x1,y1]
 function hitLine(px, py, x0, y0, x1, y1) {
     const tolerance = 0.03;
 

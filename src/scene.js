@@ -25,12 +25,36 @@ class Scene {
         return false;
     }
 
+    hittestControlPoints(x, y, r) {
+	const transform = undefined;
+	const index = r[0];
+        if (index >= 0 && index < this.curves.length) {
+            const e = this.curves[index].hittestControlPoints(x,y, transform);
+	    if (e && r[0] == e[1]) {
+		return true;
+	    }
+        }
+        return false;
+    }
+
     pick(x,y) {
 	const t = new trns.Transformation(this.numCopies, this.reflection);
 
         for (let i = 0; i < this.curves.length; i++) {
             if (this.curves[i].hittest(x,y, t)) {
                 return i;
+            }
+        }
+        return undefined;
+    }
+
+    pickControlPoint(x,y) {
+	const t = new trns.Transformation(this.numCopies, this.reflection);
+
+        for (let i = 0; i < this.curves.length; i++) {
+	    const r = this.curves[i].hittestControlPoints(x,y, t);
+            if (r) {
+                return [i, r];
             }
         }
         return undefined;

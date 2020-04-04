@@ -39,62 +39,100 @@ window.addEventListener('DOMContentLoaded', () => {
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         scene.display(ctx, rect.width, rect.height);
-	scene.highlight(ctx, selectionHandler.getSelection(), canvas.width, canvas.height);
+        scene.highlight(ctx, selectionHandler.getSelection(), canvas.width, canvas.height);
         mouseHandler.display(ctx, rect.width, rect.height);
 
-	if (!paused) {
+        if (!paused) {
             window.requestAnimationFrame(renderLoop);
-	}
+        }
     }
 
     canvas.addEventListener('mousedown', (evt) => {
         const pt = util.toNDC(canvas, evt.clientX, evt.clientY);
 
         if (mouseHandler.getMode() == "draw_curve") {
-	    paused = true;
-	}
+            paused = true;
+        }
 
-	if (mouseHandler.getMode() == "select_object") {
+        if (mouseHandler.getMode() == "select_object") {
             updateStatus('select_object');
 
-	    let done = false;
-	    let changed = false;
+            let done = false;
+            let changed = false;
 
-	    // First, check if we've picked the current
-	    let i = selectionHandler.getSelection();
-	    if (i && i >= 0 && i < scene.getNumCurves()) {
-		if (scene.hittest(pt[0], pt[1], i)) {
-		    updateStatus('picked already selected ' + i);
-		    done = true;
-		}
-	    }
+            // First, check if we've picked the current
+            let i = selectionHandler.getSelection();
+            if (i && i >= 0 && i < scene.getNumCurves()) {
+                if (scene.hittest(pt[0], pt[1], i)) {
+                    updateStatus('picked already selected ' + i);
+                    done = true;
+                }
+            }
 
-	    if (!done) {
-		const i = scene.pick(pt[0],pt[1]);
-		if (typeof i == 'number') {
-		    updateStatus('picked ' + i);
-		    selectionHandler.replace(i);
-		    changed = true;
-		} else {
-		    updateStatus('picked nothing');
-		    if (getSelection()) {
-			selectionHandler.clear();
-			changed = true;
-		    }
-		}
-	    }
+            if (!done) {
+                const i = scene.pick(pt[0],pt[1]);
+                if (typeof i == 'number') {
+                    updateStatus('picked ' + i);
+                    selectionHandler.replace(i);
+                    changed = true;
+                } else {
+                    updateStatus('picked nothing');
+                    if (getSelection()) {
+                        selectionHandler.clear();
+                        changed = true;
+                    }
+                }
+            }
 
-	    if (changed) {
+            if (changed) {
                 window.requestAnimationFrame(renderLoop);
-	    }
+            }
 
-	} else {
+
+        } else if (mouseHandler.getMode() == "select_controlPoint") {
+            updateStatus('select_controlPoint');
+
+            let done = false;
+            let changed = false;
+
+            // First, check if we've picked the current
+            let r = selectionHandler.getSelection();
+            if (r && r.length == 2) {
+                const i = r[0];
+                if (i >= 0 && i < scene.getNumCurves()) {
+                    const c = r[1];
+                    if (scene.hittestControlPoints(pt[0], pt[1], r)) {
+                        updateStatus('picked already selected ' + i);
+                        done = true;
+                    }
+                }
+            }
+            if (!done) {
+                const r = scene.pickControlPoint(pt[0],pt[1]);
+                if (r && r.length == 2) {
+                    updateStatus('picked ' + r[0] + ', ' + r[1]);
+                    selectionHandler.replace(r);
+                    changed = true;
+                } else {
+                    updateStatus('picked nothing ' + typeof r);
+                    if (getSelection()) {
+                        selectionHandler.clear();
+                        changed = true;
+                    }
+                }
+            }
+
+            if (changed) {
+                window.requestAnimationFrame(renderLoop);
+            }
+
+        } else {
             mouseHandler.start(pt[0], pt[1]);
-	}
+        }
     });
 
     canvas.addEventListener('mouseup', (evt) => {
-	paused = false;
+        paused = false;
         mouseHandler.stop();
         if (mouseHandler.valid()) {
             updateStatus('mouseHandler.valid');
@@ -127,7 +165,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     canvas.addEventListener('mouseleave', (evt) => {
-	paused = false;
+        paused = false;
         mouseHandler.stop();
         mouseHandler.clear();
         window.requestAnimationFrame(renderLoop);
@@ -161,6 +199,11 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('selobj_id').addEventListener('click', (evt) => {
         updateStatus('setMode select_object');
         mouseHandler.setMode('select_object');
+    });
+
+    document.getElementById('selcpt_id').addEventListener('click', (evt) => {
+        updateStatus('setMode select_controlPoint');
+        mouseHandler.setMode('select_controlPoint');
     });
 
     document.getElementById('reflection_id').addEventListener('change', (evt) => {
