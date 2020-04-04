@@ -34,8 +34,27 @@ class LinearCurve {
         util.lerp(this.r0, this.r1, t)];
     }
 
-    hittest(x,y) {
-	return util.hitLine(x, y, this.x0, this.y0, this.x1, this.y1);
+    hittest(x,y, transform) {
+        // if there's a transform, recurse repeatedly
+        if (transform) {
+            const it = transform.makeIterator();
+            let result = it.next();
+            while (!result.done) {
+                const p0 = util.transformPoint(this.x0,this.y0,result.value);
+                const p1 = util.transformPoint(this.x1,this.y1,result.value);
+                const cNew = new LinearCurve(p0[0], p0[1], this.r0,
+                                             p1[0], p1[1], this.r1,
+                                             this.color);
+                if (cNew.hittest(x,y)) {
+                    return true;
+                }
+
+                result = it.next();
+            }
+            return false;
+        }
+
+        return util.hitLine(x, y, this.x0, this.y0, this.x1, this.y1);
     }
 
     display(ctx, scale) {
@@ -95,14 +114,35 @@ class QuadraticCurve {
         return [x, y, r];
     }
 
-    hittest(x,y) {
-	const tolerance = 0.03;
-	if (util.dist(x, y, this.x0, this.y0) < tolerance) {
-	    return true;
-	}
-	if (util.dist(x, y, this.x2, this.y2) < tolerance) {
-	    return true;
-	}
+    hittest(x,y, transform) {
+        // if there's a transform, recurse repeatedly
+        if (transform) {
+            const it = transform.makeIterator();
+            let result = it.next();
+            while (!result.done) {
+                const p0 = util.transformPoint(this.x0,this.y0,result.value);
+                const p1 = util.transformPoint(this.x1,this.y1,result.value);
+                const p2 = util.transformPoint(this.x2,this.y2,result.value);
+                const cNew = new QuadraticCurve(p0[0], p0[1], this.r0,
+                                                p1[0], p1[1], this.r1,
+                                                p2[0], p2[1], this.r2,
+                                                this.color);
+                if (cNew.hittest(x,y)) {
+                    return true;
+                }
+
+                result = it.next();
+            }
+            return false;
+        }
+
+        const tolerance = 0.03;
+        if (util.dist(x, y, this.x0, this.y0) < tolerance) {
+            return true;
+        }
+        if (util.dist(x, y, this.x2, this.y2) < tolerance) {
+            return true;
+        }
 
         let p0 = this.evaluate(0);
         for (let i = 1; i <= 50; i++) {
@@ -188,7 +228,30 @@ class CubicCurve {
         return [x, y, r];
     }
 
-    hittest(x,y) {
+    hittest(x,y, transform) {
+        // if there's a transform, recurse repeatedly
+        if (transform) {
+            const it = transform.makeIterator();
+            let result = it.next();
+            while (!result.done) {
+                const p0 = util.transformPoint(this.x0,this.y0,result.value);
+                const p1 = util.transformPoint(this.x1,this.y1,result.value);
+                const p2 = util.transformPoint(this.x2,this.y2,result.value);
+                const p3 = util.transformPoint(this.x3,this.y3,result.value);
+                const cNew = new CubicCurve(p0[0], p0[1], this.r0,
+                                            p1[0], p1[1], this.r1,
+                                            p2[0], p2[1], this.r2,
+                                            p3[0], p3[1], this.r3,
+                                            this.color);
+                if (cNew.hittest(x,y)) {
+                    return true;
+                }
+
+                result = it.next();
+            }
+            return false;
+        }
+
         // @todo bound check first
 
         let p0 = this.evaluate(0);
@@ -286,19 +349,19 @@ class Circle {
         return true;
     }
 
-    hittest(x,y) {
-	const tolerance = 0.03;
-	const r = util.dist(x, y, this.cx, this.cy);
-	if (Math.abs(r - this.radius) < tolerance) {
-	    return true;
-	} else {
-	    return false;
-	}
+    hittest(x,y, transform) {
+        const tolerance = 0.03;
+        const r = util.dist(x, y, this.cx, this.cy);
+        if (Math.abs(r - this.radius) < tolerance) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     display(ctx, scale) {
         ctx.strokeStyle = this.color;
-	ctx.lineWidth = this.strokeWidth;
+        ctx.lineWidth = this.strokeWidth;
         ctx.beginPath();
         ctx.arc(0, 0, this.radius * scale, 0, 2 * Math.PI);
         ctx.stroke();
@@ -306,7 +369,7 @@ class Circle {
 
     highlight(ctx, scale) {
         ctx.strokeStyle = "#808080";
-	ctx.lineWidth = 1;
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc(0, 0, this.radius * scale, 0, 2 * Math.PI);
         ctx.stroke();

@@ -18,15 +18,18 @@ class Scene {
     }
 
     hittest(x, y, index) {
+	const transform = undefined;
         if (index >= 0 && index < this.curves.length) {
-            return this.curves[index].hittest(x,y);
+            return this.curves[index].hittest(x,y, transform);
         }
         return false;
     }
 
     pick(x,y) {
+	const t = new trns.Transformation(this.numCopies, this.reflection);
+
         for (let i = 0; i < this.curves.length; i++) {
-            if (this.curves[i].hittest(x,y)) {
+            if (this.curves[i].hittest(x,y, t)) {
                 return i;
             }
         }
