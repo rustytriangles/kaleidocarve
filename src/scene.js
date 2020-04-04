@@ -104,9 +104,18 @@ class Scene {
     }
 
     highlight(ctx, selection, width, height) {
-        if (typeof selection == 'number' && selection >= 0 && selection < this.curves.length) {
+	let curveIndex = -1;
+	let controlPointIndex = undefined;
+	if (typeof selection == 'object' && selection.length == 2) {
+	    curveIndex = selection[0];
+	    controlPointIndex = selection[1];
+	} else if (typeof selection == 'number') {
+	    curveIndex = selection;
+	}
 
-            const c = this.curves[selection];
+        if (curveIndex >= 0 && curveIndex < this.curves.length) {
+
+            const c = this.curves[curveIndex];
             const t = new trns.Transformation(this.numCopies, this.reflection);
 
             ctx.save();
@@ -124,7 +133,7 @@ class Scene {
                                      result.value[2], result.value[3],
                                      width / 2,
                                      height / 2);
-                    c.highlight(ctx, scale);
+                    c.highlight(ctx, scale, controlPointIndex);
 
                     result = it.next();
                 }

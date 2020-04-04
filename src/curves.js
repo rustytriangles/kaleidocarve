@@ -405,7 +405,7 @@ class CubicCurve {
         }
     }
 
-    highlight(ctx, scale) {
+    highlight(ctx, scale, index) {
         ctx.strokeWidth = 1;
         ctx.strokeStyle = '#808080';
 
@@ -450,6 +450,31 @@ class CubicCurve {
         ctx.arc(c4x, c4y, r, 0, 2*Math.PI);
         ctx.stroke();
 
+	if (index) {
+            ctx.fillStyle = '#808080';
+	    switch (index) {
+	    case 1:
+		ctx.beginPath();
+		ctx.arc(c1x, c1y, r, 0, 2*Math.PI);
+		ctx.fill();
+		break;
+	    case 2:
+		ctx.beginPath();
+		ctx.arc(c2x, c2y, r, 0, 2*Math.PI);
+		ctx.fill();
+		break;
+	    case 3:
+		ctx.beginPath();
+		ctx.arc(c3x, c3y, r, 0, 2*Math.PI);
+		ctx.fill();
+		break;
+	    case 4:
+		ctx.beginPath();
+		ctx.arc(c4x, c4y, r, 0, 2*Math.PI);
+		ctx.fill();
+		break;
+	    }
+	}
     }
 }
 
