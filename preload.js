@@ -14,14 +14,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     var canvas = document.getElementById('canvas');
 
-    var mouseHandler = new mh.MouseHandler();
     var selectionHandler = new sh.SelectionHandler();
     var scene = new Scene(numCopies);
-
-    function updateStatus(str) {
-        var statusElement = document.getElementById("status");
-        statusElement.innerHTML = str;
-    }
 
     var paused = true;
     var savedWidth = -1;
@@ -47,133 +41,40 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    canvas.addEventListener('mousedown', (evt) => {
-        const pt = util.toNDC(canvas, evt.clientX, evt.clientY);
+    const renderCallback = function() {
+        if (!paused) {
+            window.requestAnimationFrame(renderLoop);
+        }
+    }
 
+    var mouseHandler = new mh.MouseHandler(scene, selectionHandler, renderCallback);
+
+    function updateStatus(str) {
+        var statusElement = document.getElementById("status");
+        statusElement.innerHTML = str;
+    }
+
+    canvas.addEventListener('mousedown', (evt) => {
         if (mouseHandler.getMode() == "draw_curve") {
             paused = true;
         }
 
-        if (mouseHandler.getMode() == "select_object") {
-            updateStatus('select_object');
-
-            let done = false;
-            let changed = false;
-
-            // First, check if we've picked the current
-            let i = selectionHandler.getSelection();
-            if (i && i >= 0 && i < scene.getNumCurves()) {
-                if (scene.hittest(pt[0], pt[1], i)) {
-                    updateStatus('picked already selected ' + i);
-                    done = true;
-                }
-            }
-
-            if (!done) {
-                const i = scene.pick(pt[0],pt[1]);
-                if (typeof i == 'number') {
-                    updateStatus('picked ' + i);
-                    selectionHandler.replace(i);
-                    changed = true;
-                } else {
-                    updateStatus('picked nothing');
-                    if (getSelection()) {
-                        selectionHandler.clear();
-                        changed = true;
-                    }
-                }
-            }
-
-            if (changed) {
-                window.requestAnimationFrame(renderLoop);
-            }
-
-
-        } else if (mouseHandler.getMode() == "select_controlPoint") {
-            updateStatus('select_controlPoint');
-
-            let done = false;
-            let changed = false;
-
-            // First, check if we've picked the current
-            let r = selectionHandler.getSelection();
-            if (r && r.length == 2) {
-                const i = r[0];
-                if (i >= 0 && i < scene.getNumCurves()) {
-                    const c = r[1];
-                    if (scene.hittestControlPoints(pt[0], pt[1], r)) {
-                        updateStatus('picked already selected ' + i);
-                        done = true;
-                    }
-                }
-            }
-            if (!done) {
-                const r = scene.pickControlPoint(pt[0],pt[1]);
-                if (r && r.length == 2) {
-                    updateStatus('picked ' + r[0] + ', ' + r[1]);
-                    selectionHandler.replace(r);
-                    changed = true;
-                } else {
-                    updateStatus('picked nothing ' + typeof r);
-                    if (getSelection()) {
-                        selectionHandler.clear();
-                        changed = true;
-                    }
-                }
-            }
-
-            if (changed) {
-                window.requestAnimationFrame(renderLoop);
-            }
-
-        } else {
-            mouseHandler.start(pt[0], pt[1]);
-        }
+	mouseHandler.mouseDownCallback(evt);
     });
 
     canvas.addEventListener('mouseup', (evt) => {
         paused = false;
-        mouseHandler.stop();
-        if (mouseHandler.valid()) {
-            updateStatus('mouseHandler.valid');
-            if (mouseHandler.getMode() == "draw_curve") {
-                updateStatus('draw_curve');
-
-                const strokeColor = document.getElementById('strokeColor_id');
-                const c = mouseHandler.createCurve(strokeColor.value);
-                const rect = canvas.getBoundingClientRect();
-
-                scene.addCurve(c);
-
-                window.requestAnimationFrame(renderLoop);
-
-            } else if (mouseHandler.getMode() == "draw_circle") {
-                updateStatus('draw_circle');
-
-                const strokeColor = document.getElementById('strokeColor_id');
-                updateStatus('strokeColor = ' + strokeColor);
-                const c = mouseHandler.createCircle(canvas.width, canvas.height, strokeColor.value);
-                updateStatus('c = ' + c);
-
-                scene.addCurve(c);
-
-                window.requestAnimationFrame(renderLoop);
-            }
-
-            mouseHandler.clear();
-        }
+        const strokeColor = document.getElementById('strokeColor_id');
+	mouseHandler.mouseUpCallback(evt, strokeColor.value);
     });
 
     canvas.addEventListener('mouseleave', (evt) => {
-        paused = false;
-        mouseHandler.stop();
-        mouseHandler.clear();
-        window.requestAnimationFrame(renderLoop);
+	paused = false;
+	mouseHandler.mouseLeaveCallback(evt);
     });
 
     canvas.addEventListener('mousemove', (evt) => {
-        const pt = util.toNDC(canvas, evt.clientX, evt.clientY);
-        mouseHandler.addPoint(pt[0], pt[1]);
+	mouseHandler.mouseMoveCallback(evt);
         mouseHandler.display(canvas.getContext('2d'), savedWidth, savedHeight);
     });
 

@@ -505,6 +505,10 @@ class Circle {
         }
     }
 
+    hittestControlPoints(x,y, transform) {
+	return false;
+    }
+
     display(ctx, scale) {
         ctx.strokeStyle = this.color;
         ctx.lineWidth = this.strokeWidth;

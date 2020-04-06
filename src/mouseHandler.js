@@ -3,11 +3,14 @@ var curves = require('../src/curves');
 var util = require('../src/util');
 
 class MouseHandler {
-    constructor() {
+    constructor(scene, selectionHandler, requestFrame) {
         this.x = [];
         this.y = [];
         this.collecting = false;
         this.mode = "draw_curve";
+        this.scene = scene;
+        this.selectionHandler = selectionHandler;
+        this.requestFrame = requestFrame;
     }
 
     setMode(newMode) {
@@ -126,21 +129,127 @@ class MouseHandler {
                 ctx.stroke();
             }
         } else if (this.mode == 'draw_circle') {
-	    if (this.x.length >= 1) {
-		let x = this.x[this.x.length - 1];
-		let y = this.y[this.y.length - 1];
-		let r = dist(0, 0, x, y);
+            if (this.x.length >= 1) {
+                let x = this.x[this.x.length - 1];
+                let y = this.y[this.y.length - 1];
+                let r = dist(0, 0, x, y);
                 var scale = Math.max(width, height) / 2;
-		ctx.beginPath();
-		ctx.arc(width/2,height/2,r * scale,0,2*Math.PI);
-		ctx.stroke();
-	    }
+                ctx.beginPath();
+                ctx.arc(width/2,height/2,r * scale,0,2*Math.PI);
+                ctx.stroke();
+            }
         }
     }
 
     clear() {
         this.x = [];
         this.y = [];
+    }
+
+    mouseDownCallback(evt) {
+        const pt = util.toNDC(canvas, evt.clientX, evt.clientY);
+
+        if (this.getMode() == "select_object") {
+
+            let done = false;
+            let changed = false;
+
+            // First, check if we've picked the current
+            let i = this.selectionHandler.getSelection();
+            if (i && i >= 0 && i < this.scene.getNumCurves()) {
+                if (this.scene.hittest(pt[0], pt[1], i)) {
+                    done = true;
+                }
+            }
+
+            if (!done) {
+                const i = this.scene.pick(pt[0],pt[1]);
+                if (typeof i == 'number') {
+                    this.selectionHandler.replace(i);
+                    changed = true;
+                } else {
+                    if (this.selectionHandler.getSelection()) {
+                        this.selectionHandler.clear();
+                        changed = true;
+                    }
+                }
+            }
+
+            if (changed) {
+                this.requestFrame();
+            }
+
+
+        } else if (this.getMode() == "select_controlPoint") {
+
+            let done = false;
+            let changed = false;
+
+            // First, check if we've picked the current
+            let r = this.selectionHandler.getSelection();
+            if (r && r.length == 2) {
+                const i = r[0];
+                if (i >= 0 && i < this.scene.getNumCurves()) {
+                    const c = r[1];
+                    if (this.scene.hittestControlPoints(pt[0], pt[1], r)) {
+                        done = true;
+                    }
+                }
+            }
+            if (!done) {
+                const r = this.scene.pickControlPoint(pt[0],pt[1]);
+                if (r && r.length == 2) {
+                    this.selectionHandler.replace(r);
+                    changed = true;
+                } else {
+                    if (this.selectionHandler.getSelection()) {
+                        this.selectionHandler.clear();
+                        changed = true;
+                    }
+                }
+            }
+
+            if (changed) {
+                this.requestFrame();
+            }
+
+        } else {
+            this.start(pt[0], pt[1]);
+        }
+    }
+
+    mouseUpCallback(evt, strokeColor) {
+        this.stop();
+        if (this.valid()) {
+            if (this.getMode() == "draw_curve") {
+
+                const c = this.createCurve(strokeColor);
+
+                this.scene.addCurve(c);
+
+                this.requestFrame();
+
+            } else if (this.getMode() == "draw_circle") {
+                const c = this.createCircle(canvas.width, canvas.height, strokeColor);
+
+                this.scene.addCurve(c);
+
+                this.requestFrame();
+            }
+
+            this.clear();
+        }
+    }
+
+    mouseMoveCallback(evt) {
+        const pt = util.toNDC(canvas, evt.clientX, evt.clientY);
+        this.addPoint(pt[0], pt[1]);
+    }
+
+    mouseLeaveCallback(evt) {
+        this.stop();
+        this.clear();
+        this.requestFrame();
     }
 }
 
