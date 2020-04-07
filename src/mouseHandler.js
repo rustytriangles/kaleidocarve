@@ -147,8 +147,11 @@ class MouseHandler {
     }
 
     mouseDownCallback(evt) {
-        const pt = util.toNDC(canvas, evt.clientX, evt.clientY);
-
+        const rect = canvas.getBoundingClientRect();
+        const cx = (rect.left + rect.right)/2;
+        const cy = (rect.top + rect.bottom)/2;
+        const scale = Math.max(rect.width, rect.height) / 2;
+        const pt = util.toNDC(evt.clientX, evt.clientY, scale, cx, cy);
         if (this.getMode() == "select_object") {
 
             let done = false;
@@ -245,7 +248,11 @@ class MouseHandler {
     }
 
     mouseMoveCallback(evt) {
-        const pt = util.toNDC(canvas, evt.clientX, evt.clientY);
+        const rect = canvas.getBoundingClientRect();
+        const cx = (rect.left + rect.right)/2;
+        const cy = (rect.top + rect.bottom)/2;
+        const scale = Math.max(rect.width, rect.height) / 2;
+        const pt = util.toNDC(evt.clientX, evt.clientY, scale, cx, cy);
         this.addPoint(pt[0], pt[1]);
     }
 

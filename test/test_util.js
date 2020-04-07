@@ -73,4 +73,31 @@ describe('toDC', function () {
 });
 
 describe('toNDC', function () {
+    const cx = 320;
+    const cy = 240;
+    const s = 128;
+
+    it('[cx,cy] should return [0,0]', function() {
+	assert.deepEqual(util.toNDC(cx,cy,s,cx,cy), [0, 0]);
+    });
+
+    it('[cx+s,cy] should return [1,0]', function() {
+	assert.deepEqual(util.toNDC(cx+s,cy,s,cx,cy), [1, 0]);
+    });
+
+    it('[cx-s,cy] should return [-1,0]', function() {
+	assert.deepEqual(util.toNDC(cx-s,cy,s,cx,cy), [-1, 0]);
+    });
+
+    it('[cx,cy+s] should return [0,1]', function() {
+	assert.deepEqual(util.toNDC(cx,cy+s,s,cx,cy), [0, 1]);
+    });
+
+    it('[cx,cy-s] should return [0,-1]', function() {
+	assert.deepEqual(util.toNDC(cx,cy-s,s,cx,cy), [0,-1]);
+    });
+
+});
+
+describe('toNDC', function () {
 });
