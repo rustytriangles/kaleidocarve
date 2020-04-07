@@ -17,6 +17,7 @@ class Scene {
         return this.curves.length;
     }
 
+    // returns true if x,y would pick curve[index]
     hittest(x, y, index) {
 	const transform = undefined;
         if (index >= 0 && index < this.curves.length) {
@@ -25,6 +26,7 @@ class Scene {
         return false;
     }
 
+    // returns true if x,y would hit r = [curve, cpt_index]
     hittestControlPoints(x, y, r) {
 	const transform = undefined;
 	const index = r[0];

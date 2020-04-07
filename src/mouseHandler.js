@@ -156,9 +156,11 @@ class MouseHandler {
 
             // First, check if we've picked the current
             let i = this.selectionHandler.getSelection();
-            if (i && i >= 0 && i < this.scene.getNumCurves()) {
-                if (this.scene.hittest(pt[0], pt[1], i)) {
-                    done = true;
+            if (typeof i == 'number') {
+                if (i >= 0 && i < this.scene.getNumCurves()) {
+                    if (this.scene.hittest(pt[0], pt[1], i)) {
+                        done = true;
+                    }
                 }
             }
 
@@ -168,7 +170,8 @@ class MouseHandler {
                     this.selectionHandler.replace(i);
                     changed = true;
                 } else {
-                    if (this.selectionHandler.getSelection()) {
+                    const prev = this.selectionHandler.getSelection();
+                    if (typeof prev == 'number') {
                         this.selectionHandler.clear();
                         changed = true;
                     }
@@ -178,7 +181,6 @@ class MouseHandler {
             if (changed) {
                 this.requestFrame();
             }
-
 
         } else if (this.getMode() == "select_controlPoint") {
 
@@ -202,7 +204,8 @@ class MouseHandler {
                     this.selectionHandler.replace(r);
                     changed = true;
                 } else {
-                    if (this.selectionHandler.getSelection()) {
+                    const prev = this.selectionHandler.getSelection();
+                    if (r && r.length == 2) {
                         this.selectionHandler.clear();
                         changed = true;
                     }

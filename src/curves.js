@@ -14,16 +14,6 @@ class LinearCurve {
         this.color = c;
     }
 
-    moveStart(x, y) {
-        this.x1 += x;
-        this.y1 += y;
-    }
-
-    moveEnd(x, y) {
-        this.x2 += x;
-        this.y2 += y;
-    }
-
     isSymmetric() {
         return false;
     }
@@ -58,7 +48,7 @@ class LinearCurve {
     }
 
     hittestControlPoints(x, y, transform) {
-	const tolerance = 0.03;
+        const tolerance = 0.03;
 
         // if there's a transform, recurse repeatedly
         if (transform) {
@@ -70,25 +60,25 @@ class LinearCurve {
                 const cNew = new LinearCurve(p0[0], p0[1], this.r1,
                                              p1[0], p1[1], this.r2,
                                              this.color);
-		const r = cNew.hittestControlPoints(x,y);
-		if (r) {
-		    return r;
-		}
+                const r = cNew.hittestControlPoints(x,y);
+                if (r) {
+                    return r;
+                }
 
                 result = it.next();
             }
             return false;
         }
 
-	if (util.dist(this.x1,this.y1,x,y) < tolerance) {
-     	    return 1;
-	}
+        if (util.dist(this.x1,this.y1,x,y) < tolerance) {
+            return 1;
+        }
 
-	if (util.dist(this.x2,this.y2,x,y) < tolerance) {
-     	    return 2;
-	}
+        if (util.dist(this.x2,this.y2,x,y) < tolerance) {
+            return 2;
+        }
 
-	return false;
+        return false;
     }
 
     display(ctx, scale) {
@@ -122,16 +112,6 @@ class QuadraticCurve {
         this.y3 = y3;
         this.r3 = r3;
         this.color = c;
-    }
-
-    moveStart(x, y) {
-        this.x1 += x;
-        this.y1 += y;
-    }
-
-    moveEnd(x, y) {
-        this.x3 += x;
-        this.y3 += y;
     }
 
     isSymmetric() {
@@ -204,8 +184,8 @@ class QuadraticCurve {
                                                 p1[0], p1[1], this.r2,
                                                 p2[0], p2[1], this.r3,
                                                 this.color);
-		const r = cNew.hittestControlPoints(x,y);
-		if (r) {
+                const r = cNew.hittestControlPoints(x,y);
+                if (r) {
                     return r;
                 }
 
@@ -214,7 +194,7 @@ class QuadraticCurve {
             return false;
         }
 
-	const tolerance = 0.03;
+        const tolerance = 0.03;
 
         if (util.dist(x, y, this.x1, this.y1) < tolerance) {
             return 1;
@@ -270,20 +250,6 @@ class CubicCurve {
         this.y4 = y4;
         this.r4 = r4;
         this.color = c;
-    }
-
-    moveStart(x, y) {
-        this.x1 += x;
-        this.y1 += y;
-        this.x2 += x / 2;
-        this.y2 += y / 2;
-    }
-
-    moveEnd(x, y) {
-        this.x3 += x / 2;
-        this.y3 += y / 2;
-        this.x4 += x;
-        this.y4 += y;
     }
 
     isSymmetric() {
@@ -358,7 +324,7 @@ class CubicCurve {
                                             p3[0], p3[1], this.r4,
                                             this.color);
                 const r = cNew.hittestControlPoints(x,y);
-		if (r) {
+                if (r) {
                     return r;
                 }
 
@@ -367,7 +333,7 @@ class CubicCurve {
             return false;
         }
 
-	const tolerance = 0.03;
+        const tolerance = 0.03;
 
         if (util.dist(x, y, this.x1, this.y1) < tolerance) {
             return 1;
@@ -450,31 +416,31 @@ class CubicCurve {
         ctx.arc(c4x, c4y, r, 0, 2*Math.PI);
         ctx.stroke();
 
-	if (index) {
+        if (index) {
             ctx.fillStyle = '#808080';
-	    switch (index) {
-	    case 1:
-		ctx.beginPath();
-		ctx.arc(c1x, c1y, r, 0, 2*Math.PI);
-		ctx.fill();
-		break;
-	    case 2:
-		ctx.beginPath();
-		ctx.arc(c2x, c2y, r, 0, 2*Math.PI);
-		ctx.fill();
-		break;
-	    case 3:
-		ctx.beginPath();
-		ctx.arc(c3x, c3y, r, 0, 2*Math.PI);
-		ctx.fill();
-		break;
-	    case 4:
-		ctx.beginPath();
-		ctx.arc(c4x, c4y, r, 0, 2*Math.PI);
-		ctx.fill();
-		break;
-	    }
-	}
+            switch (index) {
+            case 1:
+                ctx.beginPath();
+                ctx.arc(c1x, c1y, r, 0, 2*Math.PI);
+                ctx.fill();
+                break;
+            case 2:
+                ctx.beginPath();
+                ctx.arc(c2x, c2y, r, 0, 2*Math.PI);
+                ctx.fill();
+                break;
+            case 3:
+                ctx.beginPath();
+                ctx.arc(c3x, c3y, r, 0, 2*Math.PI);
+                ctx.fill();
+                break;
+            case 4:
+                ctx.beginPath();
+                ctx.arc(c4x, c4y, r, 0, 2*Math.PI);
+                ctx.fill();
+                break;
+            }
+        }
     }
 }
 
@@ -506,7 +472,7 @@ class Circle {
     }
 
     hittestControlPoints(x,y, transform) {
-	return false;
+        return false;
     }
 
     display(ctx, scale) {
