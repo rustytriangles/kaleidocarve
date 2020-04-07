@@ -66,8 +66,16 @@ class Scene {
         this.numCopies = numCopies;
     }
 
+    getNumCopies() {
+        return this.numCopies;
+    }
+
     setReflection(newValue) {
         this.reflection = newValue;
+    }
+
+    getReflection() {
+        return this.reflection;
     }
 
     clear() {
@@ -145,3 +153,5 @@ class Scene {
         }
     }
 }
+
+module.exports = { Scene };

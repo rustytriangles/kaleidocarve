@@ -71,6 +71,10 @@ describe('LinearCurve/hittest', function () {
     // Transformation(4,false) is 90 degree rotations
     const t = new transform.Transformation(4, false);
 
+    it('hittest(-5,18, transform) should return false', function() {
+        assert.isNotOk(c.hittest(-5,18, t));
+    });
+
     it('hittest(startPoint, transform) should return true', function() {
         assert.isOk(c.hittest( startPoint[0], startPoint[1], t));
         assert.isOk(c.hittest(-startPoint[1], startPoint[0], t));
@@ -131,6 +135,10 @@ describe('LinearCurve/hittestControlPoints', function () {
 
     // Transformation(4,false) is 90 degree rotations
     const t = new transform.Transformation(4, false);
+
+    it('hittestControlPoints(-5,18, transform) should return false', function() {
+        assert.isNotOk(c.hittestControlPoints(-5,18, t));
+    });
 
     it('hittestControlPoints(startPoint, transform) should return 1', function() {
         assert.equal(c.hittestControlPoints( startPoint[0], startPoint[1], t), 1);
@@ -212,6 +220,10 @@ describe('QuadraticCurve/hittest', function () {
     // Transformation(4,false) is 90 degree rotations
     const t = new transform.Transformation(4, false);
 
+    it('hittest(0,0,transform) should return false', function() {
+        assert.isNotOk(c.hittest(0,0, t));
+    });
+
     it('hittest(startPoint, transform) should return true', function() {
         assert.isOk(c.hittest( startPoint[0], startPoint[1], t));
         assert.isOk(c.hittest(-startPoint[1], startPoint[0], t));
@@ -269,6 +281,10 @@ describe('QuadraticCurve/hittestControlPoints', function () {
 
     // Transformation(4,false) is 90 degree rotations
     const t = new transform.Transformation(4, false);
+
+    it('hittest(0,0,transform) should return false', function() {
+        assert.isNotOk(c.hittestControlPoints(0,0, t));
+    });
 
     it('hittestControlPoints(startPoint, transform) should return 1', function() {
         assert.equal(c.hittestControlPoints( startPoint[0], startPoint[1], t), 1);
@@ -393,6 +409,10 @@ describe('CubicCurve/hittest', function () {
     // Transformation(4,false) is 90 degree rotations
     const t = new transform.Transformation(4, false);
 
+    it('hittest(-5,18,transform) should return false', function() {
+        assert.isNotOk(c.hittest(-5,18, t));
+    });
+
     it('hittest(startPoint,transform) should return true', function() {
         assert.isOk(c.hittest( c1[0], c1[1], t));
         assert.isOk(c.hittest(-c1[1], c1[0], t));
@@ -471,6 +491,10 @@ describe('CubicCurve/hittestControlPoints', function () {
     // Transformation(4,false) is 90 degree rotations
     const t = new transform.Transformation(4, false);
 
+    it('hittestControlPoints(-5,18,transform) should return false', function() {
+        assert.isNotOk(c.hittestControlPoints(-5,18, t));
+    });
+
     it('hittestControlPoints(startPoint,transform) should return 1', function() {
         assert.equal(c.hittestControlPoints( c1[0], c1[1], t), 1);
         assert.equal(c.hittestControlPoints(-c1[1], c1[0], t), 1);
@@ -526,7 +550,6 @@ describe('Circle/hittest', function () {
     const r = 7;
     var c = new curves.Circle(cx, cy, r,
                               2, '#00FF00');
-
 
     it('hittest(center) should return false', function() {
         assert.isNotOk(c.hittest(cx,cy));
