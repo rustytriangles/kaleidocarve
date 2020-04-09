@@ -132,7 +132,7 @@ class MouseHandler {
             if (this.x.length >= 1) {
                 let x = this.x[this.x.length - 1];
                 let y = this.y[this.y.length - 1];
-                let r = dist(0, 0, x, y);
+                let r = util.dist(0, 0, x, y);
                 var scale = Math.max(width, height) / 2;
                 ctx.beginPath();
                 ctx.arc(width/2,height/2,r * scale,0,2*Math.PI);
@@ -208,7 +208,7 @@ class MouseHandler {
                     changed = true;
                 } else {
                     const prev = this.selectionHandler.getSelection();
-                    if (r && r.length == 2) {
+                    if (prev && prev.length == 2) {
                         this.selectionHandler.clear();
                         changed = true;
                     }
