@@ -4,11 +4,25 @@ var gg = require('./src/gcodeGenerator');
 var sh = require('./src/selectionHandler');
 var util = require('./src/util');
 
+// @todo
+//
+// - on selection change, update radius & color inputs
+// - dragging control points
+// - handle selected in strokeColor_id.onchange
+// - undo
+// - save/load
+// - finish connecting toolDiameter * angle
+// - grid
+// - zoom
+// - no exponential notation
+//
 window.addEventListener('DOMContentLoaded', () => {
     const replaceText = (selector, text) => {
         const element = document.getElementById(selector)
         if (element) element.innerText = text
     }
+
+    const radiusRange = document.getElementById('radius_id');
 
     const numCopiesRange = document.getElementById('numCopies_id');
     var numCopies = numCopiesRange.value;
@@ -80,6 +94,37 @@ window.addEventListener('DOMContentLoaded', () => {
         mouseHandler.display(canvas.getContext('2d'), savedWidth, savedHeight);
     });
 
+    radiusRange.addEventListener('change', (evt) => {
+	const toolDiam = 3.15;
+	const newRadius = toolDiam / 2 * radiusRange.value / 100;
+
+	let changed = false;
+        let i = selectionHandler.getSelection();
+        if (typeof i == 'number') {
+	    let c = scene.curves[i];
+	    c.r3 = newRadius;
+	    changed = true;
+	} else if (i && i.length == 2) {
+	    let c = scene.curves[i[0]];
+	    switch (i[1]) {
+	    case 1:
+		c.r1 = newRadius;
+		break;
+	    case 2:
+		c.r2 = newRadius;
+		break;
+	    case 3:
+		c.r3 = newRadius;
+		break;
+	    case 4:
+		c.r4 = newRadius;
+		break;
+	    }
+	    changed = true;
+	} else {
+	}
+    });
+
     numCopiesRange.addEventListener('change', (evt) => {
         scene.setNumCopies(numCopiesRange.value);
         window.requestAnimationFrame(renderLoop);
@@ -123,6 +168,20 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('reflection_id').addEventListener('change', (evt) => {
         scene.setReflection(evt.target.checked);
         window.requestAnimationFrame(renderLoop);
+    });
+
+    document.addEventListener("keydown", function(event) {
+	var KeyID = event.keyCode;
+	const backspaceKeyCode = 8;
+	const deleteKeyCode = 46;
+	if (event.keyCode == backspaceKeyCode || event.keyCode == deleteKeyCode) {
+            let i = selectionHandler.getSelection();
+            if (typeof i == 'number') {
+		scene.curves.splice(i, 1);
+		selectionHandler.clear();
+		window.requestAnimationFrame(renderLoop);
+	    }
+	}
     });
 
     paused = false;

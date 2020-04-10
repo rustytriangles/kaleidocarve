@@ -16,7 +16,7 @@ function xfm(xin, yin, gen) {
     const xout = xin * gen.transform[0] + yin * gen.transform[2] + gen.transform[4];
     const yout = xin * gen.transform[1] + yin * gen.transform[3] + gen.transform[5];
 
-    return [xout * gen.scale, yout * gen.scale];
+    return [xout * gen.scale, -yout * gen.scale];
 }
 
 // fs error handler
@@ -35,8 +35,8 @@ class GCodeGenerator {
 
         this.toolDiameter = toolDiam;
         this.toolAngle = angle;
-        this.feedRate = 1000;
-        this.spindleRate = 5000;
+        this.feedRate = 200;
+        this.spindleRate = 8000;
 
         this.arcSupport = false;
 
@@ -50,7 +50,7 @@ class GCodeGenerator {
         this.output.push('G90 G94');
 
         // Feed rate
-        this.output.push('F300');
+        this.output.push('F' + fmt(this.feedRate));
 
         // XY plane
         this.output.push('G17');
