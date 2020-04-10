@@ -1,5 +1,6 @@
 ﻿// Kaleidocurves © 2020 RustyTriangles LLC
 var mh = require('./src/mouseHandler');
+var gg = require('./src/gcodeGenerator');
 var sh = require('./src/selectionHandler');
 var util = require('./src/util');
 
@@ -59,22 +60,23 @@ window.addEventListener('DOMContentLoaded', () => {
             paused = true;
         }
 
-	mouseHandler.mouseDownCallback(evt);
+        updateStatus('selected = ' + selectionHandler.getSelection());
+        mouseHandler.mouseDownCallback(evt);
     });
 
     canvas.addEventListener('mouseup', (evt) => {
         paused = false;
         const strokeColor = document.getElementById('strokeColor_id');
-	mouseHandler.mouseUpCallback(evt, strokeColor.value);
+        mouseHandler.mouseUpCallback(evt, strokeColor.value);
     });
 
     canvas.addEventListener('mouseleave', (evt) => {
-	paused = false;
-	mouseHandler.mouseLeaveCallback(evt);
+        paused = false;
+        mouseHandler.mouseLeaveCallback(evt);
     });
 
     canvas.addEventListener('mousemove', (evt) => {
-	mouseHandler.mouseMoveCallback(evt);
+        mouseHandler.mouseMoveCallback(evt);
         mouseHandler.display(canvas.getContext('2d'), savedWidth, savedHeight);
     });
 
@@ -85,7 +87,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('clear_id').addEventListener('click', (evt) => {
         scene.clear();
+        selectionHandler.clear();
         window.requestAnimationFrame(renderLoop);
+    });
+
+    document.getElementById('generate_id').addEventListener('click', (evt) => {
+	const scale = 75;
+	const toolDiam = 3.15;
+	const angle = 30;
+	let gen = new gg.GCodeGenerator(scale, toolDiam, angle);
+        scene.generate(gen);
+	const fname = document.getElementById('filename_id');
+	gen.save(fname.value);
     });
 
     document.getElementById('curve_id').addEventListener('click', (evt) => {

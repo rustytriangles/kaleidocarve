@@ -49,6 +49,11 @@ function toDC(x, y, s, w, h) {
     return [x * s + w / 2, y * s + h / 2];
 }
 
+// Convert point from device to normalized
+function toNDC(xdc, ydc, s, cx, cy) {
+    return [(xdc - cx) / s, (ydc - cy) / s];
+}
+
 // Return [x, y] transformed by mat
 function transformPoint(x, y, mat) {
     const xNew = x*mat[0] + y*mat[2] + mat[4];
@@ -56,14 +61,11 @@ function transformPoint(x, y, mat) {
     return [xNew, yNew];
 }
 
-// Convert point from device to normalized
-// @todo Change interface to make testing cleaner
-function toNDC(canvas, xdc, ydc) {
-    const rect = canvas.getBoundingClientRect();
-    const w = Math.max(rect.width, rect.height) / 2;
-    const cx = (rect.left + rect.right) / 2;
-    const cy = (rect.top + rect.bottom) / 2;
-    return [(xdc - cx) / w, (ydc - cy) / w];
+function radiusToDepth(radius, toolDiam, toolAngle) {
+    const r = Math.max(0,Math.min(radius, toolDiam/2));
+    const beta = Math.PI * (90 - toolAngle/2) / 180;
+    const z = -r * Math.tan(beta);
+    return z;
 }
 
-module.exports = {dist, hitLine, lerp, toDC, toNDC, transformPoint};
+module.exports = {dist, hitLine, lerp, toDC, toNDC, transformPoint, radiusToDepth};

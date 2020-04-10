@@ -8,13 +8,14 @@
   },
   "scripts": {
     "start": "electron .",
-    "test": "mocha",
+    "test": "nyc mocha",
     "clean": "rm -rf node_modules"
   },
   "dependencies": {
     "chai": "^4.2.0",
     "electron": "^8.1.1",
     "mocha": "^7.1.1",
+    "nyc": "^15.0.1",
     "scss": "^0.2.4"
   }
 }

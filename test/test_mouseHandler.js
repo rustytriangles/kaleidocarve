@@ -76,9 +76,9 @@ describe('MouseHandler/createCurve', function() {
 	assert.instanceOf(c, curves.LinearCurve);
 
 	assert.deepEqual(c.evaluate(0), [startPoint, 0].flat());
-	assert.deepEqual(c.evaluate(1), [endPoint, 2].flat());
+	assert.deepEqual(c.evaluate(1), [endPoint, 1.5].flat());
 
-	const expectedMidPoint = [(5+7)/2, (6+8)/2, 1];
+	const expectedMidPoint = [(5+7)/2, (6+8)/2, 0.75];
 	assert.deepEqual(c.evaluate(0.5), expectedMidPoint);
     });
 
@@ -98,9 +98,9 @@ describe('MouseHandler/createCurve', function() {
 	assert.instanceOf(c, curves.CubicCurve);
 
 	assert.deepEqual(c.evaluate(0), [startPoint, 0].flat());
-	assert.deepEqual(c.evaluate(1), [endPoint, 2].flat());
+	assert.deepEqual(c.evaluate(1), [endPoint, 0.75].flat());
 
-	const expectedMidPoint = [(1+3*3+3*5+7)/8, (2+3*4+3*6+8)/8, 2.5];
+	const expectedMidPoint = [(1+3*3+3*5+7)/8, (2+3*4+3*6+8)/8, 1.03125];
 	assert.deepEqual(c.evaluate(0.5), expectedMidPoint);
     });
 });

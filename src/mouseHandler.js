@@ -83,9 +83,9 @@ class MouseHandler {
             const y2 = (2 * yr - yq) / 18;
 
             const r0 = 0;
-            const r1 = 2;
-            const r2 = 4;
-            const r3 = 2;
+            const r1 = 1;
+            const r2 = 1.5;
+            const r3 = 0.75;
             return new curves.CubicCurve(x0, y0, r0,
                 x1, y1, r1,
                 x2, y2, r2,
@@ -101,7 +101,7 @@ class MouseHandler {
             const y1 = this.y[this.y.length - 1];
 
             const r0 = 0;
-            const r1 = 2;
+            const r1 = 1.5;
             return new curves.LinearCurve(x0, y0, r0, x1, y1, r1, color);
         }
     }
@@ -111,7 +111,7 @@ class MouseHandler {
             const x = this.x[this.x.length - 1];
             const y = this.y[this.y.length - 1];
             const r = util.dist(0, 0, x, y);
-            return new curves.Circle(0, 0, r, 4, color);
+            return new curves.Circle(0, 0, r, 1.5, color);
         }
     }
 
@@ -132,7 +132,7 @@ class MouseHandler {
             if (this.x.length >= 1) {
                 let x = this.x[this.x.length - 1];
                 let y = this.y[this.y.length - 1];
-                let r = dist(0, 0, x, y);
+                let r = util.dist(0, 0, x, y);
                 var scale = Math.max(width, height) / 2;
                 ctx.beginPath();
                 ctx.arc(width/2,height/2,r * scale,0,2*Math.PI);
@@ -147,8 +147,11 @@ class MouseHandler {
     }
 
     mouseDownCallback(evt) {
-        const pt = util.toNDC(canvas, evt.clientX, evt.clientY);
-
+        const rect = canvas.getBoundingClientRect();
+        const cx = (rect.left + rect.right)/2;
+        const cy = (rect.top + rect.bottom)/2;
+        const scale = Math.max(rect.width, rect.height) / 2;
+        const pt = util.toNDC(evt.clientX, evt.clientY, scale, cx, cy);
         if (this.getMode() == "select_object") {
 
             let done = false;
@@ -156,9 +159,11 @@ class MouseHandler {
 
             // First, check if we've picked the current
             let i = this.selectionHandler.getSelection();
-            if (i && i >= 0 && i < this.scene.getNumCurves()) {
-                if (this.scene.hittest(pt[0], pt[1], i)) {
-                    done = true;
+            if (typeof i == 'number') {
+                if (i >= 0 && i < this.scene.getNumCurves()) {
+                    if (this.scene.hittest(pt[0], pt[1], i)) {
+                        done = true;
+                    }
                 }
             }
 
@@ -168,7 +173,8 @@ class MouseHandler {
                     this.selectionHandler.replace(i);
                     changed = true;
                 } else {
-                    if (this.selectionHandler.getSelection()) {
+                    const prev = this.selectionHandler.getSelection();
+                    if (typeof prev == 'number') {
                         this.selectionHandler.clear();
                         changed = true;
                     }
@@ -178,7 +184,6 @@ class MouseHandler {
             if (changed) {
                 this.requestFrame();
             }
-
 
         } else if (this.getMode() == "select_controlPoint") {
 
@@ -202,7 +207,8 @@ class MouseHandler {
                     this.selectionHandler.replace(r);
                     changed = true;
                 } else {
-                    if (this.selectionHandler.getSelection()) {
+                    const prev = this.selectionHandler.getSelection();
+                    if (prev && prev.length == 2) {
                         this.selectionHandler.clear();
                         changed = true;
                     }
@@ -242,7 +248,11 @@ class MouseHandler {
     }
 
     mouseMoveCallback(evt) {
-        const pt = util.toNDC(canvas, evt.clientX, evt.clientY);
+        const rect = canvas.getBoundingClientRect();
+        const cx = (rect.left + rect.right)/2;
+        const cy = (rect.top + rect.bottom)/2;
+        const scale = Math.max(rect.width, rect.height) / 2;
+        const pt = util.toNDC(evt.clientX, evt.clientY, scale, cx, cy);
         this.addPoint(pt[0], pt[1]);
     }
 
