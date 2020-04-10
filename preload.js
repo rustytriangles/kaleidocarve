@@ -94,8 +94,9 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('generate_id').addEventListener('click', (evt) => {
 	const scale = 500;
 	const angle = 30;
-	let gen = new gg.GCodeGenerator('foobar.nc',scale,angle);
+	let gen = new gg.GCodeGenerator(scale,angle);
         scene.generate(gen);
+	gen.save('foobar2.nc');
     });
 
     document.getElementById('curve_id').addEventListener('click', (evt) => {

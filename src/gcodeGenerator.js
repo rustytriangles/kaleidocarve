@@ -29,25 +29,8 @@ function handleErr(err) {
     }
 }
 
-// (T1  D=3.15 CR=0 - ZMIN=-3 - flat end mill)
-// G90 G94                Absolute coordinates ; Feedrate per minute
-// G17                    XY plane
-// G21                    Units millimeters
-// G28 G91 Z0             Home ; Incremental coordinates ; 
-// G90                    Absolute coordinates
-//
-// (2D Pocket Hex 1)
-// T1 M6                  Tool 1 ; Automatic tool change
-// S5000 M3               Spindle 5000 ; Spindle on
-// G54                    Work coordinate system
-// G0 X39.263 Y29.976     Rapid positioning
-// Z15
-// Z5
-// G1 Z2.815 F1000
-
 class GCodeGenerator {
-    constructor(filename, scale, angle) {
-        this.filename = filename;
+    constructor(scale, angle) {
         this.scale = scale;
         this.retractZ = 10;
         this.transform = [1, 0, 0, 1, 0, 0];
@@ -58,73 +41,64 @@ class GCodeGenerator {
         this.feedRate = 1000;
         this.spindleRate = 5000;
 
-        fs.writeFile(this.filename,
-                     '(Kaleidocarve GCode)\n',
-                     handleErr);
+        this.output = [];
+        this.output.push('(Kaleidocarve GCode)');
 
         // Tool description
-        fs.appendFileSync(this.filename,
-                          '(T1 D=' + fmt(this.toolDiameter) + ' V-Mill)\n',
-                          handleErr);
+        this.output.push('(T1 D=' + fmt(this.toolDiameter) + ' V-Mill)');
 
         // Absolute coordinates ; Feedrate per minute
-        fs.appendFileSync(this.filename,
-                          'G90 G94\n',
-                          handleErr);
+        this.output.push('G90 G94');
 
         // XY plane
-        fs.appendFileSync(this.filename,
-                          'G17\n',
-                          handleErr);
+        this.output.push('G17');
 
         // Units millimeters
-        fs.appendFileSync(this.filename,
-                          'G21\n',
-                          handleErr);
+        this.output.push('G21');
 
         // Spindle on
-        fs.appendFileSync(this.filename,
-                          'S' + this.spindleRate + ' M3\n',
-                          handleErr);
+        this.output.push('S' + this.spindleRate + ' M3');
+    }
+
+    save(filename) {
+        let writer = fs.createWriteStream(filename,
+                                          {flags: 'w'}).on('error', handleErr);
+        for (let i = 0; i < this.output.length; i++) {
+            writer.write(this.output[i] + '\n')
+        }
+    }
+
+    clear() {
+        this.output = [];
     }
 
     comment(str) {
-        fs.appendFileSync(this.filename,
-                          '(' + str + ')\n',
-                          handleErr);
+        this.output.push('(' + str + ')');
     }
 
     // move head above [x, y]
     moveAbove(x, y) {
         const [gx, gy] = xfm(x, y, this);
-        fs.appendFileSync(this.filename,
-                          'G00 X' + fmt(gx) + ' Y' + fmt(gy) + '\n',
-                          handleErr);
+        this.output.push('G00 X' + fmt(gx) + ' Y' + fmt(gy));
     }
 
     // drop head until cut width = r
     dropTo(r) {
         const gz = computeZ(r, this);
-        fs.appendFileSync(this.filename,
-                          'Z' + fmt(gz) + '\n',
-                          handleErr);
+        this.output.push('Z' + fmt(gz));
     }
 
     // raise cutter
     retract() {
         const gz = fmt(this.retractZ);
-        fs.appendFileSync(this.filename,
-                          'Z' + gz + '\n',
-                          handleErr);
+        this.output.push('Z' + gz);
     }
 
     // cut from current location to [x, y] adjusting depth until width = r
     moveTo(x, y, r) {
         const [gx, gy] = xfm(x, y, this);
         const gz = computeZ(r, this);
-        fs.appendFileSync(this.filename,
-                          'G01 X' + fmt(gx) +  ' Y' + fmt(gy) + ' Z' + fmt(gz) + '\n',
-                          handleErr);
+        this.output.push('G01 X' + fmt(gx) +  ' Y' + fmt(gy) + ' Z' + fmt(gz));
     }
 
     // generate full circle with center at current location + [r, 0]
@@ -132,9 +106,7 @@ class GCodeGenerator {
         // current point is on circle
         // [I, J] is vector to center
         const [gi, gj] = xfm(r, 0, this);
-        fs.appendFileSync(this.filename,
-                          'G02 I' + fmt(gi) + ' J' + fmt(gj) + '\n',
-                          handleErr);
+        this.output.push('G02 I' + fmt(gi) + ' J' + fmt(gj));
     }
 
     saveTransform() {
