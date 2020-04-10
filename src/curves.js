@@ -97,6 +97,13 @@ class LinearCurve {
 
     highlight(ctx, scale) {
     }
+
+    generate(ctx, scale) {
+        ctx.moveAbove(this.x1, this.y1);
+        ctx.dropTo(this.r1);
+        ctx.moveTo(this.x2, this.y2, this.r2);
+        ctx.retract();
+    }
 }
 
 // Quadratic curve with 3 control points
@@ -198,6 +205,7 @@ class QuadraticCurve {
 
         if (util.dist(x, y, this.x1, this.y1) < tolerance) {
             return 1;
+
         }
 
         if (util.dist(x, y, this.x2, this.y2) < tolerance) {
@@ -231,6 +239,26 @@ class QuadraticCurve {
     }
 
     highlight(ctx, scale) {
+    }
+
+    generate(ctx) {
+        ctx.moveAbove(this.x1, this.y1);
+        ctx.dropTo(this.r1);
+        const l = util.dist(this.x1, this.y1, this.x2, this.y2) +
+              util.dist(this.x2, this.y2, this.x3, this.y3);
+        //        const num_steps = l * scale / 4;
+        const num_steps = 10;
+        for (let t = 0; t <= 1; t = t + 1 / num_steps) {
+            const f0 = Math.pow(1 - t, 2);
+            const f1 = 2 * (1 - t) * t;
+            const f2 = Math.pow(t, 2);
+            const x = f0 * this.x1 + f1 * this.x2 + f2 * this.x3;
+            const y = f0 * this.y1 + f1 * this.y2 + f2 * this.y3;
+            const r = f0 * this.r1 + f1 * this.r2 + f2 * this.r3;
+
+            ctx.moveTo(x, y, r);
+        }
+        ctx.retract();
     }
 }
 
@@ -442,6 +470,23 @@ class CubicCurve {
             }
         }
     }
+
+    generate(ctx) {
+        ctx.moveAbove(this.x1,this.y1);
+        ctx.dropTo(this.r1);
+        const l1 = util.dist(this.x1, this.y1, this.x4, this.y4);
+        const l2 = util.dist(this.x1, this.y1, this.x2, this.y2) +
+            util.dist(this.x2, this.y2, this.x3, this.y3) +
+            util.dist(this.x3, this.y3, this.x4, this.y4);
+        const l = (l1 + l2) / 2;
+        //        const num_steps = l * scale / 2;
+        const num_steps = 10;
+        for (let t = 0; t <= 1; t = t + 1 / num_steps) {
+            const p = this.evaluate(t);
+            ctx.moveTo(p[0], p[1], p[2]);
+        }
+        ctx.retract();
+    }
 }
 
 class Circle {
@@ -489,6 +534,12 @@ class Circle {
         ctx.beginPath();
         ctx.arc(0, 0, this.radius * scale, 0, 2 * Math.PI);
         ctx.stroke();
+    }
+
+    generate(ctx) {
+        ctx.moveAbove(-this.radius, 0);
+        ctx.dropTo(this.strokeWidth);
+        ctx.xcircle(this.radius);
     }
 }
 

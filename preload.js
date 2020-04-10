@@ -1,5 +1,6 @@
 ﻿// Kaleidocurves © 2020 RustyTriangles LLC
 var mh = require('./src/mouseHandler');
+var gg = require('./src/gcodeGenerator');
 var sh = require('./src/selectionHandler');
 var util = require('./src/util');
 
@@ -88,6 +89,13 @@ window.addEventListener('DOMContentLoaded', () => {
         scene.clear();
         selectionHandler.clear();
         window.requestAnimationFrame(renderLoop);
+    });
+
+    document.getElementById('generate_id').addEventListener('click', (evt) => {
+	const scale = 500;
+	const angle = 30;
+	let gen = new gg.GCodeGenerator('foobar.nc',scale,angle);
+        scene.generate(gen);
     });
 
     document.getElementById('curve_id').addEventListener('click', (evt) => {

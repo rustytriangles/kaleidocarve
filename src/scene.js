@@ -19,7 +19,7 @@ class Scene {
 
     // returns true if x,y would pick curve[index]
     hittest(x, y, index) {
-	const transform = undefined;
+        const transform = undefined;
         if (index >= 0 && index < this.curves.length) {
             return this.curves[index].hittest(x,y, transform);
         }
@@ -28,19 +28,19 @@ class Scene {
 
     // returns true if x,y would hit r = [curve, cpt_index]
     hittestControlPoints(x, y, r) {
-	const transform = undefined;
-	const index = r[0];
+        const transform = undefined;
+        const index = r[0];
         if (index >= 0 && index < this.curves.length) {
             const e = this.curves[index].hittestControlPoints(x,y, transform);
-	    if (e && r[0] == e[1]) {
-		return true;
-	    }
+            if (e && r[0] == e[1]) {
+                return true;
+            }
         }
         return false;
     }
 
     pick(x,y) {
-	const t = new trns.Transformation(this.numCopies, this.reflection);
+        const t = new trns.Transformation(this.numCopies, this.reflection);
 
         for (let i = 0; i < this.curves.length; i++) {
             if (this.curves[i].hittest(x,y, t)) {
@@ -51,10 +51,10 @@ class Scene {
     }
 
     pickControlPoint(x,y) {
-	const t = new trns.Transformation(this.numCopies, this.reflection);
+        const t = new trns.Transformation(this.numCopies, this.reflection);
 
         for (let i = 0; i < this.curves.length; i++) {
-	    const r = this.curves[i].hittestControlPoints(x,y, t);
+            const r = this.curves[i].hittestControlPoints(x,y, t);
             if (r) {
                 return [i, r];
             }
@@ -114,14 +114,14 @@ class Scene {
     }
 
     highlight(ctx, selection, width, height) {
-	let curveIndex = -1;
-	let controlPointIndex = undefined;
-	if (typeof selection == 'object' && selection.length == 2) {
-	    curveIndex = selection[0];
-	    controlPointIndex = selection[1];
-	} else if (typeof selection == 'number') {
-	    curveIndex = selection;
-	}
+        let curveIndex = -1;
+        let controlPointIndex = undefined;
+        if (typeof selection == 'object' && selection.length == 2) {
+            curveIndex = selection[0];
+            controlPointIndex = selection[1];
+        } else if (typeof selection == 'number') {
+            curveIndex = selection;
+        }
 
         if (curveIndex >= 0 && curveIndex < this.curves.length) {
 
@@ -152,6 +152,36 @@ class Scene {
             ctx.restore();
         }
     }
+
+
+    generate(ctx) {
+        const t = new trns.Transformation(this.numCopies, this.reflection);
+
+        ctx.saveTransform();
+        let step = 2.0 * Math.PI / this.numCopies;
+        for (let i = 0; i < this.curves.length; i++) {
+	    ctx.comment('Curve ' + i);
+            const c = this.curves[i];
+
+            if (c.isSymmetric()) {
+                c.generate(ctx);
+            } else {
+                const it = t.makeIterator();
+                let result = it.next();
+                while (!result.done) {
+                    ctx.setTransform(result.value[0], result.value[1],
+                                     result.value[2], result.value[3],
+                                     0, 0);
+                    c.generate(ctx);
+
+                    result = it.next();
+                }
+            }
+
+        }
+        ctx.restoreTransform();
+    }
+
 }
 
 module.exports = { Scene };
