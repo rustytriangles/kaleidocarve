@@ -13,6 +13,10 @@ class MockContext {
     comment(str) {
     }
 
+    isArcSupported() {
+	return true;
+    }
+
     // move head above [x, y]
     moveAbove(x, y) {
     }

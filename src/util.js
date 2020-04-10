@@ -61,4 +61,11 @@ function transformPoint(x, y, mat) {
     return [xNew, yNew];
 }
 
-module.exports = {dist, hitLine, lerp, toDC, toNDC, transformPoint};
+function radiusToDepth(radius, toolDiam, toolAngle) {
+    const r = Math.max(0,Math.min(radius, toolDiam/2));
+    const beta = Math.PI * (90 - toolAngle/2) / 180;
+    const z = -r * Math.tan(beta);
+    return z;
+}
+
+module.exports = {dist, hitLine, lerp, toDC, toNDC, transformPoint, radiusToDepth};

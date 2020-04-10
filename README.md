@@ -3,6 +3,10 @@ An Electron app for creating radially symmetric patterns.
 
 ![screenshot](images/screenshot.png)
 
+And then generates G-Code to carve the pattern on a CNC machine with a V groove bit.
+
+![carve](images/carve.png)
+
 ## Modules used
 
 * [electron](https://www.electronjs.org/) Electron framework

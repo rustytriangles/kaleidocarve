@@ -92,7 +92,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('generate_id').addEventListener('click', (evt) => {
-	const scale = 200;
+	const scale = 75;
 	const toolDiam = 3.15;
 	const angle = 30;
 	let gen = new gg.GCodeGenerator(scale, toolDiam, angle);

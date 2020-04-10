@@ -8,10 +8,7 @@ function fmt(n) {
 }
 
 function computeZ(radius, gen) {
-    const r = Math.max(0,Math.min(radius, gen.toolDiameter/2));
-    const beta = Math.PI * (90 - gen.toolAngle/2) / 180;
-    const z = -r * Math.tan(beta);
-    return z;
+    return util.radiusToDepth(radius, gen.toolDiameter, gen.toolAngle);
 }
 
 // apply transform
@@ -41,6 +38,8 @@ class GCodeGenerator {
         this.feedRate = 1000;
         this.spindleRate = 5000;
 
+        this.arcSupport = false;
+
         this.output = [];
         this.output.push('(Kaleidocarve GCode)');
 
@@ -49,6 +48,9 @@ class GCodeGenerator {
 
         // Absolute coordinates ; Feedrate per minute
         this.output.push('G90 G94');
+
+        // Feed rate
+        this.output.push('F300');
 
         // XY plane
         this.output.push('G17');
@@ -62,14 +64,14 @@ class GCodeGenerator {
 
     // save the buffered output to a file
     save(filename) {
-	// @todo These are probably in the wrong place
-	this.retract();
-	// Spindle stop
-	this.output.push('M05');
-	// End of program
-	this.output.push('M30');
+        // @todo These are probably in the wrong place
+        this.retract();
+        // Spindle stop
+        this.output.push('M05');
+        // End of program
+        this.output.push('M30');
 
-	// save the output to a file
+        // save the output to a file
         let writer = fs.createWriteStream(filename,
                                           {flags: 'w'}).on('error', handleErr);
         for (let i = 0; i < this.output.length; i++) {
@@ -85,6 +87,10 @@ class GCodeGenerator {
     // add a comment
     comment(str) {
         this.output.push('(' + str + ')');
+    }
+
+    isArcSupported() {
+        return this.arcSupport;
     }
 
     // move head above [x, y]

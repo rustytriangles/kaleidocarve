@@ -537,9 +537,23 @@ class Circle {
     }
 
     generate(ctx) {
-        ctx.moveAbove(-this.radius, 0);
-        ctx.dropTo(this.strokeWidth);
-        ctx.xcircle(this.radius);
+	if (ctx.isArcSupported()) {
+            ctx.moveAbove(-this.radius, 0);
+            ctx.dropTo(this.strokeWidth);
+            ctx.xcircle(this.radius);
+            ctx.retract();
+	} else {
+            ctx.moveAbove(this.radius, 0);
+            ctx.dropTo(this.strokeWidth);
+	    const numSteps = 200;
+	    for (let i = 0; i < numSteps; i++) {
+		const a = 2 * Math.PI * i / (numSteps - 1);
+		const c = Math.cos(a);
+		const s = Math.sin(a);
+		ctx.moveTo(this.radius * c, this.radius * s, this.strokeWidth);
+	    }
+	    ctx.retract();
+	}
     }
 }
 

@@ -83,9 +83,9 @@ class MouseHandler {
             const y2 = (2 * yr - yq) / 18;
 
             const r0 = 0;
-            const r1 = 2;
-            const r2 = 4;
-            const r3 = 2;
+            const r1 = 1;
+            const r2 = 1.5;
+            const r3 = 0.75;
             return new curves.CubicCurve(x0, y0, r0,
                 x1, y1, r1,
                 x2, y2, r2,
@@ -101,7 +101,7 @@ class MouseHandler {
             const y1 = this.y[this.y.length - 1];
 
             const r0 = 0;
-            const r1 = 2;
+            const r1 = 1.5;
             return new curves.LinearCurve(x0, y0, r0, x1, y1, r1, color);
         }
     }
@@ -111,7 +111,7 @@ class MouseHandler {
             const x = this.x[this.x.length - 1];
             const y = this.y[this.y.length - 1];
             const r = util.dist(0, 0, x, y);
-            return new curves.Circle(0, 0, r, 4, color);
+            return new curves.Circle(0, 0, r, 1.5, color);
         }
     }
 
