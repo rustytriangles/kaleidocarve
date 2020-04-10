@@ -60,6 +60,7 @@ class GCodeGenerator {
         this.output.push('S' + this.spindleRate + ' M3');
     }
 
+    // save the buffered output to a file
     save(filename) {
         let writer = fs.createWriteStream(filename,
                                           {flags: 'w'}).on('error', handleErr);
@@ -68,10 +69,12 @@ class GCodeGenerator {
         }
     }
 
+    // clear the buffered output
     clear() {
         this.output = [];
     }
 
+    // add a comment
     comment(str) {
         this.output.push('(' + str + ')');
     }
@@ -109,15 +112,20 @@ class GCodeGenerator {
         this.output.push('G02 I' + fmt(gi) + ' J' + fmt(gj));
     }
 
+    // push the current transform on a stack
     saveTransform() {
         this.savedTransformStack.push(this.transform);
     }
 
+    // revert the current transform to the previous one
     restoreTransform() {
         this.transform = this.savedTransformStack[this.savedTransformStack.length-1];
         this.savedTransformStack.pop();
     }
 
+    // set the current transform
+    // xo = xi*a + yi*c + e;
+    // yo = xi*b + yi*d + f;
     setTransform(a,b,c,d,e,f) {
         this.transform = [a, b, c, d, e, f];
     }
