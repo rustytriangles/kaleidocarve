@@ -92,11 +92,13 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('generate_id').addEventListener('click', (evt) => {
-	const scale = 500;
+	const scale = 200;
+	const toolDiam = 3.15;
 	const angle = 30;
-	let gen = new gg.GCodeGenerator(scale,angle);
+	let gen = new gg.GCodeGenerator(scale, toolDiam, angle);
         scene.generate(gen);
-	gen.save('foobar2.nc');
+	const fname = document.getElementById('filename_id');
+	gen.save(fname.value);
     });
 
     document.getElementById('curve_id').addEventListener('click', (evt) => {

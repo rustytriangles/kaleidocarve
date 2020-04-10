@@ -30,13 +30,13 @@ function handleErr(err) {
 }
 
 class GCodeGenerator {
-    constructor(scale, angle) {
+    constructor(scale, toolDiam, angle) {
         this.scale = scale;
         this.retractZ = 10;
         this.transform = [1, 0, 0, 1, 0, 0];
         this.savedTransformStack = [];
 
-        this.toolDiameter = 3.15
+        this.toolDiameter = toolDiam;
         this.toolAngle = angle;
         this.feedRate = 1000;
         this.spindleRate = 5000;
@@ -62,6 +62,14 @@ class GCodeGenerator {
 
     // save the buffered output to a file
     save(filename) {
+	// @todo These are probably in the wrong place
+	this.retract();
+	// Spindle stop
+	this.output.push('M05');
+	// End of program
+	this.output.push('M30');
+
+	// save the output to a file
         let writer = fs.createWriteStream(filename,
                                           {flags: 'w'}).on('error', handleErr);
         for (let i = 0; i < this.output.length; i++) {
