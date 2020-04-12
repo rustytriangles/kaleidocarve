@@ -26,19 +26,22 @@
             <input type="radio" id="selcpt_id" value="selcpt" name="operation">
             <label for="selcpt_id" class="select-control-point-button"></label>
         </div>
-        <div><label>Color</label><input type="color" id="strokeColor_id" /></div>
+        <div><input type="color" id="strokeColor_id" /><label>Color</label></div>
         <div>
 	  <input type="range" id="radius_id" min="0" max="100" value="50"/>
+	  <label>W</label>
 	</div>
         <hr />
         <div>
-            <input type="range" id="numCopies_id" name="vol" min="1" max="8" />
+          <input type="range" id="numCopies_id" name="vol" min="1" max="11" value="5"/>
+	  <label>#</label>
         </div>
         <div><input type="checkbox" class="switch" id="reflection_id" /><label>Reflection</label></div>
+        <div><input type="checkbox" class="switch" id="grid_id" checked="false"/><label>Grid</label></div>
         <div><input type="button" id="clear_id" value="Clear" /></div>
         <hr />
-	<div>Diameter<input type="text" id="diam_id" value="3.15"></input></div>
-	<div>Angle<input type="text" id="angle_id" value="30"></input></div>
+	<div><input type="text" id="diam_id" value="3.15"></input><label>Φ</label></div>
+	<div><input type="text" id="angle_id" value="30"></input><label>∠</label></div>
 	<div><input type="text" id="filename_id" value="kaleido.nc"></input></div>
         <div><input type="button" id="generate_id" value="Generate GCode" /></div>
         <div id="status">Status</div>
@@ -48,6 +51,7 @@
     </div>
     <script src="../src/curves.js"></script>
     <script src="../src/gcodeGenerator.js"</script>
+    <script src="../src/grid.js"</script>
     <script src="../src/mouseHandler.js"></script>
     <script src="../src/renderer.js"></script>
     <script src="../src/scene.js"></script>

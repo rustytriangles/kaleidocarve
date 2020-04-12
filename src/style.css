@@ -8,7 +8,7 @@
 }
 
 .left-controls div {
-    padding: 6px 8px 6px 16px;
+    padding: 6px 6px 6px 6px;
     display: block;
 }
 
@@ -31,6 +31,7 @@
 
 label {
     border: 1px solid rgba($font-color,.15);
+    padding-left: 6px;
     box-sizing: border-box;
     height: 100%;
     width: 100%;
@@ -47,8 +48,8 @@ label.curve-button {
     background-size: contain;
     cursor: pointer;
     display: inline-block;
-    height: 40px;
-    width: 40px;
+    height: 32px;
+    width: 32px;
 }
 
 label.circle-button {
@@ -56,8 +57,8 @@ label.circle-button {
     background-size: contain;
     cursor: pointer;
     display: inline-block;
-    height: 40px;
-    width: 40px;
+    height: 32px;
+    width: 32px;
 }
 
 label.select-object-button {
@@ -65,8 +66,8 @@ label.select-object-button {
     background-size: contain;
     cursor: pointer;
     display: inline-block;
-    height: 40px;
-    width: 40px;
+    height: 32px;
+    width: 32px;
 }
 
 label.select-control-point-button {
@@ -74,8 +75,8 @@ label.select-control-point-button {
     background-size: contain;
     cursor: pointer;
     display: inline-block;
-    height: 40px;
-    width: 40px;
+    height: 32px;
+    width: 32px;
 }
 
 input[type="radio"] {
@@ -91,4 +92,12 @@ input[type="radio"]:active ~ label {
 input[type="radio"]:checked ~ label {
     opacity: 1;
     border: 1px solid rgba(255,0,0,1);
+}
+
+input[type="range"] {
+    width: 128px;
+}
+
+input[type="text"] {
+    width: 128px;
 }
