@@ -39,6 +39,19 @@ class LinearCurve {
 	}
     }
 
+    setPoint(i, x, y) {
+	switch (i) {
+	case 1:
+	    this.x1 = x;
+	    this.y1 = y;
+	    break;
+	case 2:
+	    this.x2 = x;
+	    this.y2 = y;
+	    break;
+	}
+    }
+
     evaluate(t) {
         return [util.lerp(this.x1, this.x2, t),
         util.lerp(this.y1, this.y2, t),
@@ -168,6 +181,23 @@ class QuadraticCurve {
 	    break;
 	case 3:
 	    this.r3 = r;
+	    break;
+	}
+    }
+
+    setPoint(i, x, y) {
+	switch (i) {
+	case 1:
+	    this.x1 = x;
+	    this.y1 = y;
+	    break;
+	case 2:
+	    this.x2 = x;
+	    this.y2 = y;
+	    break;
+	case 3:
+	    this.x3 = x;
+	    this.y3 = y;
 	    break;
 	}
     }
@@ -358,6 +388,27 @@ class CubicCurve {
 	    break;
 	case 4:
 	    this.r4 = r;
+	    break;
+	}
+    }
+
+    setPoint(i, x, y) {
+	switch (i) {
+	case 1:
+	    this.x1 = x;
+	    this.y1 = y;
+	    break;
+	case 2:
+	    this.x2 = x;
+	    this.y2 = y;
+	    break;
+	case 3:
+	    this.x3 = x;
+	    this.y3 = y;
+	    break;
+	case 4:
+	    this.x4 = x;
+	    this.y4 = y;
 	    break;
 	}
     }

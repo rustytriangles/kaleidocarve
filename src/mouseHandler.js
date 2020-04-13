@@ -19,6 +19,7 @@ class MouseHandler {
         this.scene = scene;
         this.selectionHandler = selectionHandler;
         this.requestFrame = requestFrame;
+	this.modifiedCurve = undefined;
     }
 
     setMode(newMode) {
@@ -146,12 +147,17 @@ class MouseHandler {
                 ctx.arc(width/2,height/2,r * scale,0,2*Math.PI);
                 ctx.stroke();
             }
+        } else if (this.mode == Modes.SELECT_CONTROLPOINT) {
+//	    if (this.modifiedCurve) {
+//		this.modifiedCurve.highlight(ctx, width, height);
+//	    }
         }
     }
 
     clear() {
         this.x = [];
         this.y = [];
+	this.modifiedCurve = undefined;
     }
 
     mouseDownCallback(evt) {
@@ -209,10 +215,12 @@ class MouseHandler {
                     }
                 }
             }
+
             if (!done) {
                 const r = this.scene.pickControlPoint(pt[0],pt[1]);
                 if (r && r.length == 2) {
                     this.selectionHandler.replace(r);
+		    this.modifiedCurve = this.scene.curves[r[0]];
                     changed = true;
                 } else {
                     const prev = this.selectionHandler.getSelection();
@@ -250,9 +258,8 @@ class MouseHandler {
 
                 this.requestFrame();
             }
-
-            this.clear();
         }
+        this.clear();
     }
 
     mouseMoveCallback(evt) {
@@ -261,7 +268,18 @@ class MouseHandler {
         const cy = (rect.top + rect.bottom)/2;
         const scale = Math.max(rect.width, rect.height) / 2;
         const pt = util.toNDC(evt.clientX, evt.clientY, scale, cx, cy);
-        this.addPoint(pt[0], pt[1]);
+
+	if (this.getMode() == Modes.DRAW_CURVE || this.getMode() == Modes.DRAW_CIRCLE) {
+            this.addPoint(pt[0], pt[1]);
+	} else if (this.getMode() == Modes.SELECT_CONTROLPOINT) {
+	    if (this.modifiedCurve) {
+		let r = this.selectionHandler.getSelection();
+		if (r && r.length == 2) {
+		    this.modifiedCurve.setPoint(r[1], pt[0], pt[1]);
+                    this.requestFrame();
+		}
+	    }
+	}
     }
 
     mouseLeaveCallback(evt) {
