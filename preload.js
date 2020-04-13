@@ -7,15 +7,12 @@ var util = require('./src/util');
 
 // @todo
 //
-// - on selection change, update radius & color inputs
 // - dragging control points
-// - handle selected in strokeColor_id.onchange
 // - undo
 // - save/load
 // - finish connecting toolDiameter * angle
-// - grid
 // - zoom
-// - no exponential notation
+// - no exponential notation in gcode
 //
 window.addEventListener('DOMContentLoaded', () => {
     const replaceText = (selector, text) => {
@@ -71,11 +68,18 @@ window.addEventListener('DOMContentLoaded', () => {
     var mouseHandler = new mh.MouseHandler(scene, selectionHandler, renderCallback);
 
     selectionHandler.on('selectionChanged', function() {
-        let i = selectionHandler.getSelection();
-        if (typeof i == 'number') {
-	    const c = scene.curves[i];
+        if (selectionHandler.getSelectionType() == 'object') {
+            let i = selectionHandler.getSelection();
+            const c = scene.curves[i];
             document.getElementById('strokeColor_id').value = c.color;
-	}
+        } else if (selectionHandler.getSelectionType() == 'control_point') {
+            let s = selectionHandler.getSelection();
+            const c = scene.curves[s[0]];
+
+            const newRadius = c.getRadius(s[1]);
+            const toolDiam = 3.15;
+            radiusRange.value = util.radiusToSliderValue(newRadius, toolDiam);
+        }
     });
 
     function updateStatus(str) {
@@ -109,43 +113,28 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('strokeColor_id').addEventListener('change', (evt) => {
-        let i = selectionHandler.getSelection();
-        if (typeof i == 'number') {
+        if (selectionHandler.getSelectionType() == 'object') {
+            let i = selectionHandler.getSelection();
             let c = scene.curves[i];
             c.color = document.getElementById('strokeColor_id').value;
-	}
+        }
     });
 
     radiusRange.addEventListener('change', (evt) => {
         const toolDiam = 3.15;
-        const newRadius = toolDiam / 2 * radiusRange.value / 100;
+        const newRadius = util.sliderValueToRadius(radiusRange.value, toolDiam);
 
         let changed = false;
-        let i = selectionHandler.getSelection();
-        if (typeof i == 'number') {
+        const t = selectionHandler.getSelectionType();
+        if (t == 'object') {
+            let i = selectionHandler.getSelection();
             let c = scene.curves[i];
             c.r3 = newRadius;
             changed = true;
-        } else if (i && i.length == 2) {
-            let c = scene.curves[i[0]];
-            switch (i[1]) {
-            case 1:
-		updateStatus('c.r1 = ' + newRadius);
-                c.r1 = newRadius;
-                break;
-            case 2:
-		updateStatus('c.r2 = ' + newRadius);
-                c.r2 = newRadius;
-                break;
-            case 3:
-		updateStatus('c.r3 = ' + newRadius);
-                c.r3 = newRadius;
-                break;
-            case 4:
-		updateStatus('c.r4 = ' + newRadius);
-                c.r4 = newRadius;
-                break;
-            }
+        } else if (t == 'control_point') {
+            let r = selectionHandler.getSelection();
+            let c = scene.curves[r[0]];
+            c.setRadius(r[1], newRadius);
             changed = true;
         } else {
         }
@@ -206,8 +195,8 @@ window.addEventListener('DOMContentLoaded', () => {
         const backspaceKeyCode = 8;
         const deleteKeyCode = 46;
         if (event.keyCode == backspaceKeyCode || event.keyCode == deleteKeyCode) {
-            let i = selectionHandler.getSelection();
-            if (typeof i == 'number') {
+            if (selectionHandler.getSelectionType() == 'object') {
+                let i = selectionHandler.getSelection();
                 scene.curves.splice(i, 1);
                 selectionHandler.clear();
                 window.requestAnimationFrame(renderLoop);

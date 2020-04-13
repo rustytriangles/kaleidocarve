@@ -114,5 +114,5 @@ describe('MouseHandler/createCircle', function() {
     const c = m.createCircle('#00ff00');
     assert.instanceOf(c, curves.Circle);
 
-    assert.equal(c.getRadius(), 5);
+    assert.equal(c.radius, 5);
 });

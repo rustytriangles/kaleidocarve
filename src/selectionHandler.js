@@ -3,6 +3,7 @@ var util = require('../src/util');
 var EventEmitter = require('events');
 
 class SelectionHandler extends EventEmitter {
+
     constructor() {
 	super();
     }
@@ -25,6 +26,15 @@ class SelectionHandler extends EventEmitter {
 
     getSelection() {
 	return this.selection;
+    }
+
+    getSelectionType() {
+	if (typeof this.selection == 'number') {
+	    return 'object';
+	} else if (this.selection && this.selection.length == 2) {
+	    return 'control_point';
+	}
+	return undefined;
     }
 
     display(ctx, curves, width, height) {
