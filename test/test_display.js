@@ -283,7 +283,7 @@ describe('MouseHandler/display', function () {
 
     it('draw_curve', function() {
         let mouseHandler = new mh.MouseHandler(undefined, undefined, undefined);
-        mouseHandler.setMode('draw_curve');
+        mouseHandler.setMode(mh.Modes.DRAW_CURVE);
         mouseHandler.start();
         mouseHandler.addPoint(0,0);
         mouseHandler.addPoint(5,2);
@@ -299,7 +299,7 @@ describe('MouseHandler/display', function () {
 
     it('draw_circle', function() {
         let mouseHandler = new mh.MouseHandler(undefined, undefined, undefined);
-        mouseHandler.setMode('draw_circle');
+        mouseHandler.setMode(mh.Modes.DRAW_CIRCLE);
         mouseHandler.start();
         mouseHandler.addPoint(5,2);
 

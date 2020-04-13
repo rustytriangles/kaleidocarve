@@ -88,7 +88,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     canvas.addEventListener('mousedown', (evt) => {
-        if (mouseHandler.getMode() == "draw_curve") {
+        if (mouseHandler.getMode() == mh.Modes.DRAW_CURVE) {
             paused = true;
         }
 
@@ -163,22 +163,22 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('curve_id').addEventListener('click', (evt) => {
-        mouseHandler.setMode('draw_curve');
+        mouseHandler.setMode(mh.Modes.DRAW_CURVE);
     });
 
     document.getElementById('circle_id').addEventListener('click', (evt) => {
         updateStatus('setMode draw_circle');
-        mouseHandler.setMode('draw_circle');
+        mouseHandler.setMode(mh.Modes.DRAW_CIRCLE);
     });
 
     document.getElementById('selobj_id').addEventListener('click', (evt) => {
         updateStatus('setMode select_object');
-        mouseHandler.setMode('select_object');
+        mouseHandler.setMode(mh.Modes.SELECT_OBJECT);
     });
 
     document.getElementById('selcpt_id').addEventListener('click', (evt) => {
         updateStatus('setMode select_controlPoint');
-        mouseHandler.setMode('select_controlPoint');
+        mouseHandler.setMode(mh.Modes.SELECT_CONTROLPOINT);
     });
 
     document.getElementById('reflection_id').addEventListener('change', (evt) => {

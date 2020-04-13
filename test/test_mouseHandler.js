@@ -9,15 +9,15 @@ describe('MouseHandler/mode', function() {
 
     it('Initial value', function() {
 	let m = new mh.MouseHandler();
-	assert.equal(m.getMode(), 'draw_curve');
+	assert.equal(m.getMode(), mh.Modes.DRAW_CURVE);
     });
 
     it('After setMode', function() {
 	let m = new mh.MouseHandler();
-	m.setMode('draw_circle');
-	assert.equal(m.getMode(), 'draw_circle');
-	m.setMode('draw_curve');
-	assert.equal(m.getMode(), 'draw_curve');
+	m.setMode(mh.Modes.DRAW_CIRCLE);
+	assert.equal(m.getMode(), mh.Modes.DRAW_CIRCLE);
+	m.setMode(mh.Modes.DRAW_CURVE);
+	assert.equal(m.getMode(), mh.Modes.DRAW_CURVE);
     });
 
 });
