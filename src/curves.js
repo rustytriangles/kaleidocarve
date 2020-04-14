@@ -18,6 +18,40 @@ class LinearCurve {
         return false;
     }
 
+    getRadius(i) {
+	switch (i) {
+	case 1:
+	    return this.r1;
+	case 2:
+	    return this.r2;
+	}
+	return undefined;
+    }
+
+    setRadius(i, r) {
+	switch (i) {
+	case 1:
+	    this.r1 = r;
+	    break;
+	case 2:
+	    this.r2 = r;
+	    break;
+	}
+    }
+
+    setPoint(i, x, y) {
+	switch (i) {
+	case 1:
+	    this.x1 = x;
+	    this.y1 = y;
+	    break;
+	case 2:
+	    this.x2 = x;
+	    this.y2 = y;
+	    break;
+	}
+    }
+
     evaluate(t) {
         return [util.lerp(this.x1, this.x2, t),
         util.lerp(this.y1, this.y2, t),
@@ -123,6 +157,49 @@ class QuadraticCurve {
 
     isSymmetric() {
         return false;
+    }
+
+    getRadius(i) {
+	switch (i) {
+	case 1:
+	    return this.r1;
+	case 2:
+	    return this.r2;
+	case 3:
+	    return this.r3;
+	}
+	return undefined;
+    }
+
+    setRadius(i, r) {
+	switch (i) {
+	case 1:
+	    this.r1 = r;
+	    break;
+	case 2:
+	    this.r2 = r;
+	    break;
+	case 3:
+	    this.r3 = r;
+	    break;
+	}
+    }
+
+    setPoint(i, x, y) {
+	switch (i) {
+	case 1:
+	    this.x1 = x;
+	    this.y1 = y;
+	    break;
+	case 2:
+	    this.x2 = x;
+	    this.y2 = y;
+	    break;
+	case 3:
+	    this.x3 = x;
+	    this.y3 = y;
+	    break;
+	}
     }
 
     evaluate(t) {
@@ -282,6 +359,58 @@ class CubicCurve {
 
     isSymmetric() {
         return false;
+    }
+
+    getRadius(i) {
+	switch (i) {
+	case 1:
+	    return this.r1;
+	case 2:
+	    return this.r2;
+	case 3:
+	    return this.r3;
+	case 4:
+	    return this.r4;
+	}
+	return undefined;
+    }
+
+    setRadius(i, r) {
+	switch (i) {
+	case 1:
+	    this.r1 = r;
+	    break;
+	case 2:
+	    this.r2 = r;
+	    break;
+	case 3:
+	    this.r3 = r;
+	    break;
+	case 4:
+	    this.r4 = r;
+	    break;
+	}
+    }
+
+    setPoint(i, x, y) {
+	switch (i) {
+	case 1:
+	    this.x1 = x;
+	    this.y1 = y;
+	    break;
+	case 2:
+	    this.x2 = x;
+	    this.y2 = y;
+	    break;
+	case 3:
+	    this.x3 = x;
+	    this.y3 = y;
+	    break;
+	case 4:
+	    this.x4 = x;
+	    this.y4 = y;
+	    break;
+	}
     }
 
     evaluate(t) {
@@ -498,12 +627,15 @@ class Circle {
         this.color = color;
     }
 
-    getRadius() {
-        return this.radius;
-    }
-
     isSymmetric() {
         return true;
+    }
+
+    getRadius(i) {
+	return undefined;
+    }
+
+    setRadius(i, r) {
     }
 
     hittest(x,y, transform) {

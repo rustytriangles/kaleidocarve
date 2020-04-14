@@ -68,4 +68,20 @@ function radiusToDepth(radius, toolDiam, toolAngle) {
     return z;
 }
 
-module.exports = {dist, hitLine, lerp, toDC, toNDC, transformPoint, radiusToDepth};
+function sliderValueToRadius(value, toolDiam) {
+    return toolDiam / 2 * value / 100;
+}
+
+function radiusToSliderValue(radius, toolDiam) {
+    return 2*100*radius/toolDiam;
+}
+
+module.exports = {dist,
+		  hitLine,
+		  lerp,
+		  toDC,
+		  toNDC,
+		  transformPoint,
+		  radiusToDepth,
+		  sliderValueToRadius,
+		  radiusToSliderValue};

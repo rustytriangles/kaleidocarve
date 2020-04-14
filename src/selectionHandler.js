@@ -2,7 +2,14 @@
 var util = require('../src/util');
 var EventEmitter = require('events');
 
+const Modes = {
+    OBJECT: 'object',
+    CONTROL_POINT: 'control_point',
+    EMPTY: undefined
+}
+
 class SelectionHandler extends EventEmitter {
+
     constructor() {
 	super();
     }
@@ -27,9 +34,18 @@ class SelectionHandler extends EventEmitter {
 	return this.selection;
     }
 
+    getSelectionType() {
+	if (typeof this.selection == 'number') {
+	    return Modes.OBJECT;
+	} else if (this.selection && this.selection.length == 2) {
+	    return Modes.CONTROL_POINT;
+	}
+	return Modes.EMPTY;
+    }
+
     display(ctx, curves, width, height) {
 
     }
 }
 
-module.exports = { SelectionHandler };
+module.exports = { Modes, SelectionHandler };

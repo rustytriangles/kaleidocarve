@@ -31,6 +31,20 @@ describe('LinearCurve', function () {
         (startPoint[2] + endPoint[2]) / 2]);
     });
 
+    it('get/set radius', function () {
+	assert.isUndefined(c.getRadius(0));
+	assert.equal(c.getRadius(1), startPoint[2]);
+	assert.equal(c.getRadius(2), endPoint[2]);
+	assert.isUndefined(c.getRadius(3));
+
+	const r1 = 17;
+	const r2 = 12;
+	c.setRadius(1, r1);
+	c.setRadius(2, r2);
+
+	assert.equal(c.getRadius(1), r1);
+	assert.equal(c.getRadius(2), r2);
+    });
 });
 
 describe('LinearCurve/hittest', function () {
@@ -182,6 +196,25 @@ describe('QuadraticCurve', function () {
     });
     it('evaluate(1) should return end point', function () {
         assert.deepEqual(c.evaluate(1), endPoint);
+    });
+
+    it('get/set radius', function () {
+	assert.isUndefined(c.getRadius(0));
+	assert.equal(c.getRadius(1), startPoint[2]);
+	assert.equal(c.getRadius(2), controlPoint[2]);
+	assert.equal(c.getRadius(3), endPoint[2]);
+	assert.isUndefined(c.getRadius(4));
+
+	const r1 = 17;
+	const r2 = 12;
+	const r3 = 9;
+	c.setRadius(1, r1);
+	c.setRadius(2, r2);
+	c.setRadius(3, r3);
+
+	assert.equal(c.getRadius(1), r1);
+	assert.equal(c.getRadius(2), r2);
+	assert.equal(c.getRadius(3), r3);
     });
 });
 
@@ -366,6 +399,29 @@ describe('CubicCurve', function () {
         assert.deepEqual(actual, expected);
     });
 
+
+    it('get/set radius', function () {
+	assert.isUndefined(c.getRadius(0));
+	assert.equal(c.getRadius(1), c1[2]);
+	assert.equal(c.getRadius(2), c2[2]);
+	assert.equal(c.getRadius(3), c3[2]);
+	assert.equal(c.getRadius(4), c4[2]);
+	assert.isUndefined(c.getRadius(5));
+
+	const r1 = 17;
+	const r2 = 12;
+	const r3 = 9;
+	const r4 = 11;
+	c.setRadius(1, r1);
+	c.setRadius(2, r2);
+	c.setRadius(3, r3);
+	c.setRadius(4, r4);
+
+	assert.equal(c.getRadius(1), r1);
+	assert.equal(c.getRadius(2), r2);
+	assert.equal(c.getRadius(3), r3);
+	assert.equal(c.getRadius(4), r4);
+    });
 });
 
 describe('CubicCurve/hittest', function () {

@@ -100,9 +100,6 @@ describe('toNDC', function () {
 
 });
 
-describe('toNDC', function () {
-});
-
 describe('radiusToDepth', function() {
     it('0 should return 0', function() {
         assert.equal(util.radiusToDepth(0, 3.15, 30), 0);
@@ -110,5 +107,29 @@ describe('radiusToDepth', function() {
 
     it('1.575 should return 10', function() {
         assert.closeTo(util.radiusToDepth(1.575, 3.15, 30), -5.878, 0.001);
+    });
+});
+
+describe('sliderValueToRadius', function() {
+    const toolDiameter = 3.15;
+
+    it('0 should return 0', function() {
+        assert.equal(util.sliderValueToRadius(0, toolDiameter), 0);
+    });
+
+    it('100 should return diam/2', function() {
+        assert.equal(util.sliderValueToRadius(100, 3.15), toolDiameter/2);
+    });
+});
+
+describe('radiusToSliderValue', function() {
+    const toolDiameter = 3.15;
+
+    it('0 should return 0', function() {
+        assert.equal(util.radiusToSliderValue(0, toolDiameter), 0);
+    });
+
+    it('diam/2 should return 100', function() {
+        assert.equal(util.radiusToSliderValue(toolDiameter/2, 3.15), 100);
     });
 });

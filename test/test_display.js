@@ -2,6 +2,7 @@
 
 var chai = require('chai');
 var assert = chai.assert;
+var g = require('../src/grid');
 var curves = require('../src/curves');
 var sc = require('../src/scene');
 var mh = require('../src/mouseHandler');
@@ -48,6 +49,9 @@ class MockContext {
 
     fill() {
         this.numFills += 1;
+    }
+
+    fillText(str, x, y) {
     }
 
     getNumStrokes() {
@@ -283,7 +287,7 @@ describe('MouseHandler/display', function () {
 
     it('draw_curve', function() {
         let mouseHandler = new mh.MouseHandler(undefined, undefined, undefined);
-        mouseHandler.setMode('draw_curve');
+        mouseHandler.setMode(mh.MouseModes.DRAW_CURVE);
         mouseHandler.start();
         mouseHandler.addPoint(0,0);
         mouseHandler.addPoint(5,2);
@@ -299,7 +303,7 @@ describe('MouseHandler/display', function () {
 
     it('draw_circle', function() {
         let mouseHandler = new mh.MouseHandler(undefined, undefined, undefined);
-        mouseHandler.setMode('draw_circle');
+        mouseHandler.setMode(mh.MouseModes.DRAW_CIRCLE);
         mouseHandler.start();
         mouseHandler.addPoint(5,2);
 
@@ -323,5 +327,16 @@ describe('MouseHandler/display', function () {
         assert.equal(ctx.numStrokes, 1);
         assert.closeTo(ctx.minRadius, radiusSecondCircle, 0.001);
         assert.closeTo(ctx.maxRadius, radiusSecondCircle, 0.001);
+    });
+});
+
+describe('Grid/display', function () {
+    it('draw_circle', function() {
+        let grid = new g.Grid(5, 20);
+
+        let ctx = new MockContext();
+	grid.display(ctx,420,360);
+	assert.equal(ctx.getNumStrokes(), 5);
+	assert.equal(ctx.getNumFills(), 0);
     });
 });
