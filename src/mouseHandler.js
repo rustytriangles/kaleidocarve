@@ -2,7 +2,7 @@
 var curves = require('../src/curves');
 var util = require('../src/util');
 
-const Modes = {
+const MouseModes = {
     OBJECT: 'draw_curve',
     DRAW_CIRCLE: 'draw_circle',
     SELECT_OBJECT: 'select_object',
@@ -15,7 +15,7 @@ class MouseHandler {
         this.x = [];
         this.y = [];
         this.collecting = false;
-        this.mode = Modes.DRAW_CURVE;
+        this.mode = MouseModes.DRAW_CURVE;
         this.scene = scene;
         this.selectionHandler = selectionHandler;
         this.requestFrame = requestFrame;
@@ -125,7 +125,7 @@ class MouseHandler {
     }
 
     display(ctx, width, height) {
-        if (this.mode == Modes.DRAW_CURVE) {
+        if (this.mode == MouseModes.DRAW_CURVE) {
             if (this.x.length > 1) {
                 ctx.beginPath();
                 var scale = Math.max(width, height) / 2;
@@ -137,7 +137,7 @@ class MouseHandler {
                 }
                 ctx.stroke();
             }
-        } else if (this.mode == Modes.DRAW_CIRCLE) {
+        } else if (this.mode == MouseModes.DRAW_CIRCLE) {
             if (this.x.length >= 1) {
                 let x = this.x[this.x.length - 1];
                 let y = this.y[this.y.length - 1];
@@ -147,7 +147,7 @@ class MouseHandler {
                 ctx.arc(width/2,height/2,r * scale,0,2*Math.PI);
                 ctx.stroke();
             }
-        } else if (this.mode == Modes.SELECT_CONTROLPOINT) {
+        } else if (this.mode == MouseModes.SELECT_CONTROLPOINT) {
 //	    if (this.modifiedCurve) {
 //		this.modifiedCurve.highlight(ctx, width, height);
 //	    }
@@ -166,7 +166,7 @@ class MouseHandler {
         const cy = (rect.top + rect.bottom)/2;
         const scale = Math.max(rect.width, rect.height) / 2;
         const pt = util.toNDC(evt.clientX, evt.clientY, scale, cx, cy);
-        if (this.getMode() == Modes.SELECT_OBJECT) {
+        if (this.getMode() == MouseModes.SELECT_OBJECT) {
 
             let done = false;
             let changed = false;
@@ -199,7 +199,7 @@ class MouseHandler {
                 this.requestFrame();
             }
 
-        } else if (this.getMode() == Modes.SELECT_CONTROLPOINT) {
+        } else if (this.getMode() == MouseModes.SELECT_CONTROLPOINT) {
 
             let done = false;
             let changed = false;
@@ -243,7 +243,7 @@ class MouseHandler {
     mouseUpCallback(evt, strokeColor) {
         this.stop();
         if (this.valid()) {
-            if (this.getMode() == Modes.DRAW_CURVE) {
+            if (this.getMode() == MouseModes.DRAW_CURVE) {
 
                 const c = this.createCurve(strokeColor);
 
@@ -251,7 +251,7 @@ class MouseHandler {
 
                 this.requestFrame();
 
-            } else if (this.getMode() == Modes.DRAW_CIRCLE) {
+            } else if (this.getMode() == MouseModes.DRAW_CIRCLE) {
                 const c = this.createCircle(canvas.width, canvas.height, strokeColor);
 
                 this.scene.addCurve(c);
@@ -269,9 +269,9 @@ class MouseHandler {
         const scale = Math.max(rect.width, rect.height) / 2;
         const pt = util.toNDC(evt.clientX, evt.clientY, scale, cx, cy);
 
-	if (this.getMode() == Modes.DRAW_CURVE || this.getMode() == Modes.DRAW_CIRCLE) {
+	if (this.getMode() == MouseModes.DRAW_CURVE || this.getMode() == MouseModes.DRAW_CIRCLE) {
             this.addPoint(pt[0], pt[1]);
-	} else if (this.getMode() == Modes.SELECT_CONTROLPOINT) {
+	} else if (this.getMode() == MouseModes.SELECT_CONTROLPOINT) {
 	    if (this.modifiedCurve) {
 		let r = this.selectionHandler.getSelection();
 		if (r && r.length == 2) {
@@ -289,4 +289,4 @@ class MouseHandler {
     }
 }
 
-module.exports = { Modes, MouseHandler };
+module.exports = { MouseModes, MouseHandler };

@@ -5,6 +5,8 @@ var g = require('./src/grid');
 var sh = require('./src/selectionHandler');
 var util = require('./src/util');
 
+var config = require('./config/config.json');
+
 // @todo
 //
 // - dragging control points
@@ -30,6 +32,9 @@ window.addEventListener('DOMContentLoaded', () => {
     var selectionHandler = new sh.SelectionHandler();
     var scene = new Scene(numCopies);
     var grid = new g.Grid(numCopies, 4);
+
+    document.getElementById('diam_id').value = config.toolDiam;
+    document.getElementById('angle_id').value = config.angle;
 
     var paused = true;
     var savedWidth = -1;
@@ -77,7 +82,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const c = scene.curves[s[0]];
 
             const newRadius = c.getRadius(s[1]);
-            const toolDiam = 3.15;
+            const toolDiam = document.getElementById('diam_id').value;
             radiusRange.value = util.radiusToSliderValue(newRadius, toolDiam);
         }
     });
@@ -88,7 +93,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     canvas.addEventListener('mousedown', (evt) => {
-        if (mouseHandler.getMode() == mh.Modes.DRAW_CURVE) {
+        if (mouseHandler.getMode() == mh.MouseModes.DRAW_CURVE) {
             paused = true;
         }
 
@@ -121,7 +126,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     radiusRange.addEventListener('change', (evt) => {
-        const toolDiam = 3.15;
+        const toolDiam = document.getElementById('diam_id').value;
         const newRadius = util.sliderValueToRadius(radiusRange.value, toolDiam);
 
         let changed = false;
@@ -154,31 +159,32 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('generate_id').addEventListener('click', (evt) => {
         const scale = 75;
-        const toolDiam = 3.15;
-        const angle = 30;
-        let gen = new gg.GCodeGenerator(scale, toolDiam, angle);
+        const toolDiam = document.getElementById('diam_id').value;
+        const angle = document.getElementById('angle_id').value;
+        let gen = new gg.GCodeGenerator(scale, toolDiam, angle,
+					config.feedRate, config.spindleSpeed);
         scene.generate(gen);
         const fname = document.getElementById('filename_id');
         gen.save(fname.value);
     });
 
     document.getElementById('curve_id').addEventListener('click', (evt) => {
-        mouseHandler.setMode(mh.Modes.DRAW_CURVE);
+        mouseHandler.setMode(mh.MouseModes.DRAW_CURVE);
     });
 
     document.getElementById('circle_id').addEventListener('click', (evt) => {
         updateStatus('setMode draw_circle');
-        mouseHandler.setMode(mh.Modes.DRAW_CIRCLE);
+        mouseHandler.setMode(mh.MouseModes.DRAW_CIRCLE);
     });
 
     document.getElementById('selobj_id').addEventListener('click', (evt) => {
         updateStatus('setMode select_object');
-        mouseHandler.setMode(mh.Modes.SELECT_OBJECT);
+        mouseHandler.setMode(mh.MouseModes.SELECT_OBJECT);
     });
 
     document.getElementById('selcpt_id').addEventListener('click', (evt) => {
         updateStatus('setMode select_controlPoint');
-        mouseHandler.setMode(mh.Modes.SELECT_CONTROLPOINT);
+        mouseHandler.setMode(mh.MouseModes.SELECT_CONTROLPOINT);
     });
 
     document.getElementById('reflection_id').addEventListener('change', (evt) => {
