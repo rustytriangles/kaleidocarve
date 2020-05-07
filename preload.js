@@ -1,11 +1,11 @@
 ﻿// Kaleidocurves © 2020 RustyTriangles LLC
 var mh = require('./src/mouseHandler');
+var fs = require('fs');
 var gg = require('./src/gcodeGenerator');
 var g = require('./src/grid');
 var sh = require('./src/selectionHandler');
 var util = require('./src/util');
 
-var config = require('./config/config.json');
 
 // @todo
 //
@@ -22,6 +22,13 @@ window.addEventListener('DOMContentLoaded', () => {
         if (element) element.innerText = text
     }
 
+    try {
+	let rawdata = fs.readFileSync('./config/config.json');
+	var config = JSON.parse(rawdata);
+    } catch (err) {
+	updateStatus("Error loading config.json");
+    }
+
     const radiusRange = document.getElementById('radius_id');
 
     const numCopiesRange = document.getElementById('numCopies_id');
@@ -33,8 +40,17 @@ window.addEventListener('DOMContentLoaded', () => {
     var scene = new Scene(numCopies);
     var grid = new g.Grid(numCopies, 4);
 
-    document.getElementById('diam_id').value = config.toolDiam;
-    document.getElementById('angle_id').value = config.angle;
+    let diamField = document.getElementById('diam_id');
+    diamField.value = config.toolDiam;
+    diamField.addEventListener('change', (evt) => {
+	config.toolDiam = Number.parseFloat(diamField.value);
+    });
+
+    let angleField = document.getElementById('angle_id');
+    angleField.value = config.angle;
+    angleField.addEventListener('change', (evt) => {
+	config.angle = Number.parseFloat(anglefield.value);
+    });
 
     var paused = true;
     var savedWidth = -1;
@@ -162,10 +178,19 @@ window.addEventListener('DOMContentLoaded', () => {
         const toolDiam = document.getElementById('diam_id').value;
         const angle = document.getElementById('angle_id').value;
         let gen = new gg.GCodeGenerator(scale, toolDiam, angle,
-					config.feedRate, config.spindleSpeed);
+					config.feedRate, config.spindleSpeed,
+					config.arcSupport);
         scene.generate(gen);
         const fname = document.getElementById('filename_id');
         gen.save(fname.value);
+    });
+
+    document.getElementById('save_state_id').addEventListener('click', (evt) => {
+	fs.writeFile('./config/config.json', JSON.stringify(config), function(err) {
+	    if (err) {
+		updateStatus('Error saving config.json');
+	    }
+	});
     });
 
     document.getElementById('curve_id').addEventListener('click', (evt) => {
@@ -186,6 +211,7 @@ window.addEventListener('DOMContentLoaded', () => {
         updateStatus('setMode select_controlPoint');
         mouseHandler.setMode(mh.MouseModes.SELECT_CONTROLPOINT);
     });
+
 
     document.getElementById('reflection_id').addEventListener('change', (evt) => {
         scene.setReflection(evt.target.checked);

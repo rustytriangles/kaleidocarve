@@ -1,5 +1,6 @@
-{ "toolDiam": 6.3,
-  "angle": 40,
-  "feedRate": 200,
-  "spindleSpeed": 8000
+{"toolDiam": 3.15,
+ "angle": 30,
+ "feedRate": 200,
+ "spindleSpeed": 8000,
+ "arcSupport": false
 }

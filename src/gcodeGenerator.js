@@ -23,7 +23,7 @@ function handleErr(err) {
 }
 
 class GCodeGenerator {
-    constructor(scale, toolDiam, angle, feedRate, spindleRate) {
+    constructor(scale, toolDiam, angle, feedRate, spindleRate, arcSupport) {
         this.scale = scale;
         this.retractZ = 10;
         this.transform = [1, 0, 0, 1, 0, 0];
@@ -34,7 +34,7 @@ class GCodeGenerator {
         this.feedRate = feedRate;
         this.spindleRate = spindleRate;
 
-        this.arcSupport = false;
+        this.arcSupport = arcSupport;
 
         this.output = [];
         this.output.push('(Kaleidocarve GCode)');
