@@ -1,4 +1,5 @@
 ﻿// Kaleidocurves © 2020 RustyTriangles LLC
+var curves = require('../src/curves');
 
 var trns = require('../src/transformation');
 
@@ -182,6 +183,14 @@ class Scene {
         ctx.restoreTransform();
     }
 
+    load(data) {
+        this.numCopies = data.numCopies;
+        this.reflection = data.reflection;
+        this.clear();
+        for (let c in data.curves) {
+            this.addCurve(curves.loadCurve(data.curves[c]));
+        }
+    }
 }
 
 module.exports = { Scene };

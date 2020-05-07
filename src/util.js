@@ -76,6 +76,10 @@ function radiusToSliderValue(radius, toolDiam) {
     return 2*100*radius/toolDiam;
 }
 
+function formatNumber(x) {
+    return Number.parseFloat(x).toFixed(3);
+}
+
 module.exports = {dist,
 		  hitLine,
 		  lerp,
@@ -84,4 +88,5 @@ module.exports = {dist,
 		  transformPoint,
 		  radiusToDepth,
 		  sliderValueToRadius,
-		  radiusToSliderValue};
+		  radiusToSliderValue,
+		  formatNumber};

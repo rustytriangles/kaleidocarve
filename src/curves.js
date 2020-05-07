@@ -5,6 +5,7 @@ var util = require('../src/util');
 // Linear curve between 2 points
 class LinearCurve {
     constructor(x1, y1, r1, x2, y2, r2, c) {
+	this.type = "linear";
         this.x1 = x1;
         this.y1 = y1;
         this.r1 = r1;
@@ -143,6 +144,7 @@ class LinearCurve {
 // Quadratic curve with 3 control points
 class QuadraticCurve {
     constructor(x1, y1, r1, x2, y2, r2, x3, y3, r3, c) {
+	this.type = "quadratic";
         this.x1 = x1;
         this.y1 = y1;
         this.r1 = r1;
@@ -342,6 +344,7 @@ class QuadraticCurve {
 // Cubic curve with 4 control points
 class CubicCurve {
     constructor(x1, y1, r1, x2, y2, r2, x3, y3, r3, x4, y4, r4, c) {
+	this.type = "cubic";
         this.x1 = x1;
         this.y1 = y1;
         this.r1 = r1;
@@ -620,6 +623,7 @@ class CubicCurve {
 
 class Circle {
     constructor(cx, cy, radius, strokeWidth, color) {
+	this.type = "circle";
         this.cx = cx;
         this.cy = cy;
         this.radius = radius;
@@ -689,4 +693,34 @@ class Circle {
     }
 }
 
-module.exports = { LinearCurve, QuadraticCurve, CubicCurve, Circle };
+function loadCurve(data) {
+    let result = {};
+
+    switch (data.type) {
+    case 'linear':
+        result = new curves.LinearCurve(data.x1, data.y1, data.r1,
+                                        data.x2, data.y2, data.r2,
+                                        data.color);
+        break;
+    case 'quadratic':
+        result = new curves.QuadraticCurve(data.x1, data.y1, data.r1,
+                                           data.x2, data.y2, data.r2,
+                                           data.x3, data.y3, data.r3,
+                                           data.color);
+        break;
+    case 'cubic':
+        result = new curves.CubicCurve(data.x1, data.y1, data.r1,
+                                       data.x2, data.y2, data.r2,
+                                       data.x3, data.y3, data.r3,
+                                       data.x4, data.y4, data.r4,
+                                       data.color);
+        break;
+    case 'circle':
+        result = new curves.Circle(data.cx, data.cy, data.radius,
+                                   data.strokeWidth, data.color);
+        break;
+    }
+    return result;
+}
+
+module.exports = { LinearCurve, QuadraticCurve, CubicCurve, Circle, loadCurve };

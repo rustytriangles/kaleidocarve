@@ -1,25 +1,28 @@
 ﻿// Kaleidocurves © 2020 RustyTriangles LLC
 var mh = require('./src/mouseHandler');
+var fs = require('fs');
 var gg = require('./src/gcodeGenerator');
 var g = require('./src/grid');
 var sh = require('./src/selectionHandler');
 var util = require('./src/util');
 
-var config = require('./config/config.json');
 
 // @todo
 //
-// - dragging control points
 // - undo
-// - save/load
-// - finish connecting toolDiameter * angle
 // - zoom
-// - no exponential notation in gcode
 //
 window.addEventListener('DOMContentLoaded', () => {
     const replaceText = (selector, text) => {
         const element = document.getElementById(selector)
         if (element) element.innerText = text
+    }
+
+    try {
+	let rawdata = fs.readFileSync('./config/config.json');
+	var config = JSON.parse(rawdata);
+    } catch (err) {
+	updateStatus("Error loading config.json");
     }
 
     const radiusRange = document.getElementById('radius_id');
@@ -33,8 +36,17 @@ window.addEventListener('DOMContentLoaded', () => {
     var scene = new Scene(numCopies);
     var grid = new g.Grid(numCopies, 4);
 
-    document.getElementById('diam_id').value = config.toolDiam;
-    document.getElementById('angle_id').value = config.angle;
+    let diamField = document.getElementById('diam_id');
+    diamField.value = config.toolDiam;
+    diamField.addEventListener('change', (evt) => {
+	config.toolDiam = Number.parseFloat(diamField.value);
+    });
+
+    let angleField = document.getElementById('angle_id');
+    angleField.value = config.angle;
+    angleField.addEventListener('change', (evt) => {
+	config.angle = Number.parseFloat(anglefield.value);
+    });
 
     var paused = true;
     var savedWidth = -1;
@@ -157,15 +169,48 @@ window.addEventListener('DOMContentLoaded', () => {
         window.requestAnimationFrame(renderLoop);
     });
 
+    document.getElementById('save_scene_id').addEventListener('click', (evt) => {
+	let filename = document.getElementById('scene_filename_id').value;
+	fs.writeFile(filename, JSON.stringify(scene), function(err) {
+	    if (err) {
+		updateStatus('Error saving scene');
+	    }
+	});
+    });
+
+    document.getElementById('load_scene_id').addEventListener('click', (evt) => {
+	try {
+	    let filename = document.getElementById('scene_filename_id').value;
+	    let rawdata = fs.readFileSync(filename);
+	    let data = JSON.parse(rawdata);
+	    scene.load(data);
+	    numCopiesRange.value = scene.numCopies;
+            grid.setNumCopies(numCopiesRange.value);
+	    document.getElementById('reflection_id').value = scene.getReflection();
+            window.requestAnimationFrame(renderLoop);
+	} catch (err) {
+	    updateStatus('Error loading scene');
+	}
+    });
+
     document.getElementById('generate_id').addEventListener('click', (evt) => {
         const scale = 75;
         const toolDiam = document.getElementById('diam_id').value;
         const angle = document.getElementById('angle_id').value;
         let gen = new gg.GCodeGenerator(scale, toolDiam, angle,
-					config.feedRate, config.spindleSpeed);
+					config.feedRate, config.spindleSpeed,
+					config.arcSupport);
         scene.generate(gen);
-        const fname = document.getElementById('filename_id');
+        const fname = document.getElementById('gcode_filename_id');
         gen.save(fname.value);
+    });
+
+    document.getElementById('save_state_id').addEventListener('click', (evt) => {
+	fs.writeFile('./config/config.json', JSON.stringify(config), function(err) {
+	    if (err) {
+		updateStatus('Error saving config.json');
+	    }
+	});
     });
 
     document.getElementById('curve_id').addEventListener('click', (evt) => {
@@ -186,6 +231,7 @@ window.addEventListener('DOMContentLoaded', () => {
         updateStatus('setMode select_controlPoint');
         mouseHandler.setMode(mh.MouseModes.SELECT_CONTROLPOINT);
     });
+
 
     document.getElementById('reflection_id').addEventListener('change', (evt) => {
         scene.setReflection(evt.target.checked);

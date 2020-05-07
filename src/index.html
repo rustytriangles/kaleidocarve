@@ -39,11 +39,18 @@
         <div><input type="checkbox" class="switch" id="reflection_id" /><label>Reflection</label></div>
         <div><input type="checkbox" class="switch" id="grid_id" checked="false"/><label>Grid</label></div>
         <div><input type="button" id="clear_id" value="Clear" /></div>
+	<div><input type="text" id="scene_filename_id" value=""></input></div>
+        <div>
+	  <input type="button" id="save_scene_id" value="Save" />
+	  <input type="button" id="load_scene_id" value="Load" />
+	</div>
         <hr />
 	<div><input type="text" id="diam_id" value="3.15"></input><label>Φ</label></div>
 	<div><input type="text" id="angle_id" value="30"></input><label>∠</label></div>
-	<div><input type="text" id="filename_id" value="kaleido.nc"></input></div>
+	<div><input type="text" id="gcode_filename_id" value="kaleido.nc"></input></div>
         <div><input type="button" id="generate_id" value="Generate GCode" /></div>
+	<div><input type="button" id="save_state_id", value="Save State"/></div>
+	<hr />
         <div id="status">Status</div>
     </div>
     <div class="canvasContainer">
