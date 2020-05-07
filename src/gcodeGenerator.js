@@ -3,10 +3,6 @@
 var util = require('../src/util');
 var fs = require('fs');
 
-function fmt(n) {
-    return n.toPrecision(5);
-}
-
 function computeZ(radius, gen) {
     return util.radiusToDepth(radius, gen.toolDiameter, gen.toolAngle);
 }
@@ -27,7 +23,7 @@ function handleErr(err) {
 }
 
 class GCodeGenerator {
-    constructor(scale, toolDiam, angle) {
+    constructor(scale, toolDiam, angle, feedRate, spindleRate) {
         this.scale = scale;
         this.retractZ = 10;
         this.transform = [1, 0, 0, 1, 0, 0];
@@ -35,8 +31,8 @@ class GCodeGenerator {
 
         this.toolDiameter = toolDiam;
         this.toolAngle = angle;
-        this.feedRate = 200;
-        this.spindleRate = 8000;
+        this.feedRate = feedRate;
+        this.spindleRate = spindleRate;
 
         this.arcSupport = false;
 
@@ -44,13 +40,13 @@ class GCodeGenerator {
         this.output.push('(Kaleidocarve GCode)');
 
         // Tool description
-        this.output.push('(T1 D=' + fmt(this.toolDiameter) + ' V-Mill)');
+        this.output.push('(T1 D=' + util.formatNumber(this.toolDiameter) + ' V-Mill)');
 
         // Absolute coordinates ; Feedrate per minute
         this.output.push('G90 G94');
 
         // Feed rate
-        this.output.push('F' + fmt(this.feedRate));
+        this.output.push('F' + util.formatNumber(this.feedRate));
 
         // XY plane
         this.output.push('G17');
@@ -96,18 +92,19 @@ class GCodeGenerator {
     // move head above [x, y]
     moveAbove(x, y) {
         const [gx, gy] = xfm(x, y, this);
-        this.output.push('G00 X' + fmt(gx) + ' Y' + fmt(gy));
+        this.output.push('G00 X' + util.formatNumber(gx)
+			 + ' Y' + util.formatNumber(gy));
     }
 
     // drop head until cut width = r
     dropTo(r) {
         const gz = computeZ(r, this);
-        this.output.push('Z' + fmt(gz));
+        this.output.push('Z' + util.formatNumber(gz));
     }
 
     // raise cutter
     retract() {
-        const gz = fmt(this.retractZ);
+        const gz = util.formatNumber(this.retractZ);
         this.output.push('Z' + gz);
     }
 
@@ -115,7 +112,9 @@ class GCodeGenerator {
     moveTo(x, y, r) {
         const [gx, gy] = xfm(x, y, this);
         const gz = computeZ(r, this);
-        this.output.push('G01 X' + fmt(gx) +  ' Y' + fmt(gy) + ' Z' + fmt(gz));
+        this.output.push('G01 X' + util.formatNumber(gx)
+			 + ' Y' + util.formatNumber(gy)
+			 + ' Z' + util.formatNumber(gz));
     }
 
     // generate full circle with center at current location + [r, 0]
@@ -123,7 +122,8 @@ class GCodeGenerator {
         // current point is on circle
         // [I, J] is vector to center
         const [gi, gj] = xfm(r, 0, this);
-        this.output.push('G02 I' + fmt(gi) + ' J' + fmt(gj));
+        this.output.push('G02 I' + util.formatNumber(gi)
+			 + ' J' + util.formatNumber(gj));
     }
 
     // push the current transform on a stack

@@ -133,3 +133,54 @@ describe('radiusToSliderValue', function() {
         assert.equal(util.radiusToSliderValue(toolDiameter/2, 3.15), 100);
     });
 });
+
+describe('formatNumber', function () {
+
+    it('string in', function() {
+	const input = '45.5';
+	const output = util.formatNumber(input);
+	assert.isString(output);
+	const expected = '45.500';
+	assert.strictEqual(output, expected);
+    });
+
+    it('float in', function() {
+	const input = 45.5;
+	const output = util.formatNumber(input);
+	assert.isString(output);
+	const expected = '45.500';
+	assert.equal(output, expected);
+    });
+
+    it('exp', function() {
+	const input = 1.0665e-15;
+	const output = util.formatNumber(input);
+	assert.isString(output);
+	const expected = '0.000';
+	assert.equal(output, expected);
+    });
+
+    it('negative', function() {
+	const input = -32.3;
+	const output = util.formatNumber(input);
+	assert.isString(output);
+	const expected = '-32.300';
+	assert.equal(output, expected);
+    });
+
+    it('pi', function() {
+	const input = Math.PI;
+	const output = util.formatNumber(input);
+	assert.isString(output);
+	const expected = '3.142';
+	assert.equal(output, expected);
+    });
+
+    it('big', function() {
+	const input = 1.e10;
+	const output = util.formatNumber(input);
+	assert.isString(output);
+	const expected = '10000000000.000';
+	assert.equal(output, expected);
+    });
+});
