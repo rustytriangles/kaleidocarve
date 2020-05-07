@@ -9,12 +9,8 @@ var util = require('./src/util');
 
 // @todo
 //
-// - dragging control points
 // - undo
-// - save/load
-// - finish connecting toolDiameter * angle
 // - zoom
-// - no exponential notation in gcode
 //
 window.addEventListener('DOMContentLoaded', () => {
     const replaceText = (selector, text) => {
@@ -173,6 +169,30 @@ window.addEventListener('DOMContentLoaded', () => {
         window.requestAnimationFrame(renderLoop);
     });
 
+    document.getElementById('save_scene_id').addEventListener('click', (evt) => {
+	let filename = document.getElementById('scene_filename_id').value;
+	fs.writeFile(filename, JSON.stringify(scene), function(err) {
+	    if (err) {
+		updateStatus('Error saving scene');
+	    }
+	});
+    });
+
+    document.getElementById('load_scene_id').addEventListener('click', (evt) => {
+	try {
+	    let filename = document.getElementById('scene_filename_id').value;
+	    let rawdata = fs.readFileSync(filename);
+	    let data = JSON.parse(rawdata);
+	    scene.load(data);
+	    numCopiesRange.value = scene.numCopies;
+            grid.setNumCopies(numCopiesRange.value);
+	    document.getElementById('reflection_id').value = scene.getReflection();
+            window.requestAnimationFrame(renderLoop);
+	} catch (err) {
+	    updateStatus('Error loading scene');
+	}
+    });
+
     document.getElementById('generate_id').addEventListener('click', (evt) => {
         const scale = 75;
         const toolDiam = document.getElementById('diam_id').value;
@@ -181,7 +201,7 @@ window.addEventListener('DOMContentLoaded', () => {
 					config.feedRate, config.spindleSpeed,
 					config.arcSupport);
         scene.generate(gen);
-        const fname = document.getElementById('filename_id');
+        const fname = document.getElementById('gcode_filename_id');
         gen.save(fname.value);
     });
 
