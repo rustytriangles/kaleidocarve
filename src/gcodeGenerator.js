@@ -146,4 +146,67 @@ class GCodeGenerator {
 
 }
 
-module.exports = { GCodeGenerator };
+function makeplan(pts, maxZ) {
+    // If none of the pts are too deep, the plan is fine.
+    if (pts.filter(pt => pt[2] > maxZ).length == 0) {
+        return pts;
+    }
+
+    let result = [];
+    let prevDepth = 0;
+    let nextDepth = maxZ;
+    while (true) {
+        let done = true;
+        for (let i = 0; i < pts.length; i++) {
+            if (pts[i][2] >= prevDepth) {
+                done = false;
+                if (i > 0 && pts[i-1][2] < prevDepth) {
+                    let t1 = (pts[i][2] - prevDepth) / (pts[i][2] - pts[i-1][2]);
+                    let x = pts[i-1][0] + t1*(pts[i][0] - pts[i-1][0]);
+                    let y = pts[i-1][1] + t1*(pts[i][1] - pts[i-1][1]);
+                    let z = pts[i-1][2] + t1*(pts[i][2] - pts[i-1][2]);
+                    result.push([x, y, prevDepth]);
+                }
+                if (pts[i][2] > nextDepth) {
+                    let t2 = (pts[i][2] - nextDepth) / (pts[i][2] - pts[i-1][2]);
+                    let x = pts[i-1][0] + t2*(pts[i][0] - pts[i-1][0]);
+                    let y = pts[i-1][1] + t2*(pts[i][1] - pts[i-1][1]);
+                    let z = pts[i-1][2] + t2*(pts[i][2] - pts[i-1][2]);
+                    result.push([x, y, nextDepth]);
+                    result.push([pts[i][0], pts[i][1], nextDepth]);
+                } else {
+                    if (i > 0 && pts[i-1][2] > nextDepth) {
+                        let t = (pts[i][2] - nextDepth) / (pts[i][2] - pts[i-1][2]);
+                        let x = pts[i-1][0] + t*(pts[i][0] - pts[i-1][0]);
+                        let y = pts[i-1][1] + t*(pts[i][1] - pts[i-1][1]);
+                        let z = pts[i-1][2] + t*(pts[i][2] - pts[i-1][2]);
+                        result.push([x, y, nextDepth]);
+                    }
+                    result.push([pts[i][0], pts[i][1], pts[i][2]]);
+                }
+            } else {
+                if (i > 0 && pts[i-1][2] > prevDepth) {
+                    if (pts[i-1][2] > nextDepth) {
+                        let t1 = (pts[i][2] - nextDepth) / (pts[i][2] - pts[i-1][2]);
+                        let x = pts[i-1][0] + t1*(pts[i][0] - pts[i-1][0]);
+                        let y = pts[i-1][1] + t1*(pts[i][1] - pts[i-1][1]);
+                        let z = pts[i-1][2] + t1*(pts[i][2] - pts[i-1][2]);
+                        result.push([x, y, nextDepth]);
+                    }
+                    let t2 = (pts[i][2] - prevDepth) / (pts[i][2] - pts[i-1][2]);
+                    let x = pts[i-1][0] + t2*(pts[i][0] - pts[i-1][0]);
+                    let y = pts[i-1][1] + t2*(pts[i][1] - pts[i-1][1]);
+                    let z = pts[i-1][2] + t2*(pts[i][2] - pts[i-1][2]);
+                    result.push([x, y, prevDepth]);
+                }
+            }
+        }
+        if (done) {
+            return result;
+        }
+        prevDepth = nextDepth;
+        nextDepth += maxZ;
+    }
+}
+
+module.exports = { GCodeGenerator, makeplan };
