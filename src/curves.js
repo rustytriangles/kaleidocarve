@@ -5,7 +5,7 @@ var util = require('../src/util');
 // Linear curve between 2 points
 class LinearCurve {
     constructor(x1, y1, r1, x2, y2, r2, c) {
-	this.type = "linear";
+        this.type = "linear";
         this.x1 = x1;
         this.y1 = y1;
         this.r1 = r1;
@@ -20,37 +20,37 @@ class LinearCurve {
     }
 
     getRadius(i) {
-	switch (i) {
-	case 1:
-	    return this.r1;
-	case 2:
-	    return this.r2;
-	}
-	return undefined;
+        switch (i) {
+        case 1:
+            return this.r1;
+        case 2:
+            return this.r2;
+        }
+        return undefined;
     }
 
     setRadius(i, r) {
-	switch (i) {
-	case 1:
-	    this.r1 = r;
-	    break;
-	case 2:
-	    this.r2 = r;
-	    break;
-	}
+        switch (i) {
+        case 1:
+            this.r1 = r;
+            break;
+        case 2:
+            this.r2 = r;
+            break;
+        }
     }
 
     setPoint(i, x, y) {
-	switch (i) {
-	case 1:
-	    this.x1 = x;
-	    this.y1 = y;
-	    break;
-	case 2:
-	    this.x2 = x;
-	    this.y2 = y;
-	    break;
-	}
+        switch (i) {
+        case 1:
+            this.x1 = x;
+            this.y1 = y;
+            break;
+        case 2:
+            this.x2 = x;
+            this.y2 = y;
+            break;
+        }
     }
 
     evaluate(t) {
@@ -144,7 +144,7 @@ class LinearCurve {
 // Quadratic curve with 3 control points
 class QuadraticCurve {
     constructor(x1, y1, r1, x2, y2, r2, x3, y3, r3, c) {
-	this.type = "quadratic";
+        this.type = "quadratic";
         this.x1 = x1;
         this.y1 = y1;
         this.r1 = r1;
@@ -162,46 +162,46 @@ class QuadraticCurve {
     }
 
     getRadius(i) {
-	switch (i) {
-	case 1:
-	    return this.r1;
-	case 2:
-	    return this.r2;
-	case 3:
-	    return this.r3;
-	}
-	return undefined;
+        switch (i) {
+        case 1:
+            return this.r1;
+        case 2:
+            return this.r2;
+        case 3:
+            return this.r3;
+        }
+        return undefined;
     }
 
     setRadius(i, r) {
-	switch (i) {
-	case 1:
-	    this.r1 = r;
-	    break;
-	case 2:
-	    this.r2 = r;
-	    break;
-	case 3:
-	    this.r3 = r;
-	    break;
-	}
+        switch (i) {
+        case 1:
+            this.r1 = r;
+            break;
+        case 2:
+            this.r2 = r;
+            break;
+        case 3:
+            this.r3 = r;
+            break;
+        }
     }
 
     setPoint(i, x, y) {
-	switch (i) {
-	case 1:
-	    this.x1 = x;
-	    this.y1 = y;
-	    break;
-	case 2:
-	    this.x2 = x;
-	    this.y2 = y;
-	    break;
-	case 3:
-	    this.x3 = x;
-	    this.y3 = y;
-	    break;
-	}
+        switch (i) {
+        case 1:
+            this.x1 = x;
+            this.y1 = y;
+            break;
+        case 2:
+            this.x2 = x;
+            this.y2 = y;
+            break;
+        case 3:
+            this.x3 = x;
+            this.y3 = y;
+            break;
+        }
     }
 
     evaluate(t) {
@@ -344,7 +344,7 @@ class QuadraticCurve {
 // Cubic curve with 4 control points
 class CubicCurve {
     constructor(x1, y1, r1, x2, y2, r2, x3, y3, r3, x4, y4, r4, c) {
-	this.type = "cubic";
+        this.type = "cubic";
         this.x1 = x1;
         this.y1 = y1;
         this.r1 = r1;
@@ -365,55 +365,55 @@ class CubicCurve {
     }
 
     getRadius(i) {
-	switch (i) {
-	case 1:
-	    return this.r1;
-	case 2:
-	    return this.r2;
-	case 3:
-	    return this.r3;
-	case 4:
-	    return this.r4;
-	}
-	return undefined;
+        switch (i) {
+        case 1:
+            return this.r1;
+        case 2:
+            return this.r2;
+        case 3:
+            return this.r3;
+        case 4:
+            return this.r4;
+        }
+        return undefined;
     }
 
     setRadius(i, r) {
-	switch (i) {
-	case 1:
-	    this.r1 = r;
-	    break;
-	case 2:
-	    this.r2 = r;
-	    break;
-	case 3:
-	    this.r3 = r;
-	    break;
-	case 4:
-	    this.r4 = r;
-	    break;
-	}
+        switch (i) {
+        case 1:
+            this.r1 = r;
+            break;
+        case 2:
+            this.r2 = r;
+            break;
+        case 3:
+            this.r3 = r;
+            break;
+        case 4:
+            this.r4 = r;
+            break;
+        }
     }
 
     setPoint(i, x, y) {
-	switch (i) {
-	case 1:
-	    this.x1 = x;
-	    this.y1 = y;
-	    break;
-	case 2:
-	    this.x2 = x;
-	    this.y2 = y;
-	    break;
-	case 3:
-	    this.x3 = x;
-	    this.y3 = y;
-	    break;
-	case 4:
-	    this.x4 = x;
-	    this.y4 = y;
-	    break;
-	}
+        switch (i) {
+        case 1:
+            this.x1 = x;
+            this.y1 = y;
+            break;
+        case 2:
+            this.x2 = x;
+            this.y2 = y;
+            break;
+        case 3:
+            this.x3 = x;
+            this.y3 = y;
+            break;
+        case 4:
+            this.x4 = x;
+            this.y4 = y;
+            break;
+        }
     }
 
     evaluate(t) {
@@ -623,7 +623,7 @@ class CubicCurve {
 
 class Circle {
     constructor(cx, cy, radius, strokeWidth, color) {
-	this.type = "circle";
+        this.type = "circle";
         this.cx = cx;
         this.cy = cy;
         this.radius = radius;
@@ -636,7 +636,7 @@ class Circle {
     }
 
     getRadius(i) {
-	return undefined;
+        return undefined;
     }
 
     setRadius(i, r) {
@@ -673,23 +673,23 @@ class Circle {
     }
 
     generate(ctx) {
-	if (ctx.isArcSupported()) {
+        if (ctx.isArcSupported()) {
             ctx.moveAbove(-this.radius, 0);
             ctx.dropTo(this.strokeWidth);
             ctx.xcircle(this.radius);
             ctx.retract();
-	} else {
+        } else {
             ctx.moveAbove(this.radius, 0);
             ctx.dropTo(this.strokeWidth);
-	    const numSteps = 200;
-	    for (let i = 0; i < numSteps; i++) {
-		const a = 2 * Math.PI * i / (numSteps - 1);
-		const c = Math.cos(a);
-		const s = Math.sin(a);
-		ctx.moveTo(this.radius * c, this.radius * s, this.strokeWidth);
-	    }
-	    ctx.retract();
-	}
+            const numSteps = 200;
+            for (let i = 0; i < numSteps; i++) {
+                const a = 2 * Math.PI * i / (numSteps - 1);
+                const c = Math.cos(a);
+                const s = Math.sin(a);
+                ctx.moveTo(this.radius * c, this.radius * s, this.strokeWidth);
+            }
+            ctx.retract();
+        }
     }
 }
 

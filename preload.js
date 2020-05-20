@@ -13,16 +13,11 @@ var util = require('./src/util');
 // - zoom
 //
 window.addEventListener('DOMContentLoaded', () => {
-    const replaceText = (selector, text) => {
-        const element = document.getElementById(selector)
-        if (element) element.innerText = text
-    }
-
     try {
-	let rawdata = fs.readFileSync('./config/config.json');
-	var config = JSON.parse(rawdata);
+        let rawdata = fs.readFileSync('./config/config.json');
+        var config = JSON.parse(rawdata);
     } catch (err) {
-	updateStatus("Error loading config.json");
+        updateStatus("Error loading config.json");
     }
 
     const radiusRange = document.getElementById('radius_id');
@@ -39,13 +34,13 @@ window.addEventListener('DOMContentLoaded', () => {
     let diamField = document.getElementById('diam_id');
     diamField.value = config.toolDiam;
     diamField.addEventListener('change', (evt) => {
-	config.toolDiam = Number.parseFloat(diamField.value);
+        config.toolDiam = Number.parseFloat(diamField.value);
     });
 
     let angleField = document.getElementById('angle_id');
     angleField.value = config.angle;
     angleField.addEventListener('change', (evt) => {
-	config.angle = Number.parseFloat(anglefield.value);
+        config.angle = Number.parseFloat(anglefield.value);
     });
 
     var paused = true;
@@ -80,7 +75,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if (!paused) {
             window.requestAnimationFrame(renderLoop);
         }
-    }
+    };
 
     var mouseHandler = new mh.MouseHandler(scene, selectionHandler, renderCallback);
 
@@ -154,6 +149,7 @@ window.addEventListener('DOMContentLoaded', () => {
             c.setRadius(r[1], newRadius);
             changed = true;
         } else {
+
         }
     });
 
@@ -170,27 +166,27 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('save_scene_id').addEventListener('click', (evt) => {
-	let filename = document.getElementById('scene_filename_id').value;
-	fs.writeFile(filename, JSON.stringify(scene), function(err) {
-	    if (err) {
-		updateStatus('Error saving scene');
-	    }
-	});
+        let filename = document.getElementById('scene_filename_id').value;
+        fs.writeFile(filename, JSON.stringify(scene), function(err) {
+            if (err) {
+                updateStatus('Error saving scene');
+            }
+        });
     });
 
     document.getElementById('load_scene_id').addEventListener('click', (evt) => {
-	try {
-	    let filename = document.getElementById('scene_filename_id').value;
-	    let rawdata = fs.readFileSync(filename);
-	    let data = JSON.parse(rawdata);
-	    scene.load(data);
-	    numCopiesRange.value = scene.numCopies;
+        try {
+            let filename = document.getElementById('scene_filename_id').value;
+            let rawdata = fs.readFileSync(filename);
+            let data = JSON.parse(rawdata);
+            scene.load(data);
+            numCopiesRange.value = scene.numCopies;
             grid.setNumCopies(numCopiesRange.value);
-	    document.getElementById('reflection_id').value = scene.getReflection();
+            document.getElementById('reflection_id').value = scene.getReflection();
             window.requestAnimationFrame(renderLoop);
-	} catch (err) {
-	    updateStatus('Error loading scene');
-	}
+        } catch (err) {
+            updateStatus('Error loading scene');
+        }
     });
 
     document.getElementById('generate_id').addEventListener('click', (evt) => {
@@ -198,19 +194,19 @@ window.addEventListener('DOMContentLoaded', () => {
         const toolDiam = document.getElementById('diam_id').value;
         const angle = document.getElementById('angle_id').value;
         let gen = new gg.GCodeGenerator(scale, toolDiam, angle,
-					config.feedRate, config.spindleSpeed,
-					config.arcSupport);
+                                        config.feedRate, config.spindleSpeed,
+                                        config.arcSupport);
         scene.generate(gen);
         const fname = document.getElementById('gcode_filename_id');
         gen.save(fname.value);
     });
 
     document.getElementById('save_state_id').addEventListener('click', (evt) => {
-	fs.writeFile('./config/config.json', JSON.stringify(config), function(err) {
-	    if (err) {
-		updateStatus('Error saving config.json');
-	    }
-	});
+        fs.writeFile('./config/config.json', JSON.stringify(config), function(err) {
+            if (err) {
+                updateStatus('Error saving config.json');
+            }
+        });
     });
 
     document.getElementById('curve_id').addEventListener('click', (evt) => {
@@ -258,4 +254,4 @@ window.addEventListener('DOMContentLoaded', () => {
 
     paused = false;
     window.requestAnimationFrame(renderLoop);
-})
+});

@@ -12,8 +12,6 @@ class MockContext {
         this.reset();
     }
 
-    fillStyle = '#FF0000';
-
     reset() {
         this.numFills = 0;
         this.numStrokes = 0;
@@ -22,6 +20,7 @@ class MockContext {
         this.numSetTransforms = 0;
         this.minRadius = Number.POSITIVE_INFINITY;
         this.maxRadius = Number.NEGATIVE_INFINITY;
+	this.fillStyle = '#FF0000';
     }
 
     arc(x,y,r,start,end) {
@@ -76,7 +75,7 @@ class MockContext {
         assert.closeTo(Math.sqrt(a*a+c*c),1,tol);
         assert.closeTo(Math.sqrt(b*b+d*d),1,tol);
     }
-};
+}
 
 describe('LinearCurve/display', function () {
 

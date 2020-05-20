@@ -7,7 +7,7 @@ const MouseModes = {
     DRAW_CIRCLE: 'draw_circle',
     SELECT_OBJECT: 'select_object',
     SELECT_CONTROLPOINT: 'select_controlpoint'
-}
+};
 
 class MouseHandler {
 
@@ -19,7 +19,7 @@ class MouseHandler {
         this.scene = scene;
         this.selectionHandler = selectionHandler;
         this.requestFrame = requestFrame;
-	this.modifiedCurve = undefined;
+        this.modifiedCurve = undefined;
     }
 
     setMode(newMode) {
@@ -148,16 +148,16 @@ class MouseHandler {
                 ctx.stroke();
             }
         } else if (this.mode == MouseModes.SELECT_CONTROLPOINT) {
-//	    if (this.modifiedCurve) {
-//		this.modifiedCurve.highlight(ctx, width, height);
-//	    }
+//          if (this.modifiedCurve) {
+//              this.modifiedCurve.highlight(ctx, width, height);
+//          }
         }
     }
 
     clear() {
         this.x = [];
         this.y = [];
-	this.modifiedCurve = undefined;
+        this.modifiedCurve = undefined;
     }
 
     mouseDownCallback(evt) {
@@ -220,7 +220,7 @@ class MouseHandler {
                 const r = this.scene.pickControlPoint(pt[0],pt[1]);
                 if (r && r.length == 2) {
                     this.selectionHandler.replace(r);
-		    this.modifiedCurve = this.scene.curves[r[0]];
+                    this.modifiedCurve = this.scene.curves[r[0]];
                     changed = true;
                 } else {
                     const prev = this.selectionHandler.getSelection();
@@ -269,17 +269,17 @@ class MouseHandler {
         const scale = Math.max(rect.width, rect.height) / 2;
         const pt = util.toNDC(evt.clientX, evt.clientY, scale, cx, cy);
 
-	if (this.getMode() == MouseModes.DRAW_CURVE || this.getMode() == MouseModes.DRAW_CIRCLE) {
+        if (this.getMode() == MouseModes.DRAW_CURVE || this.getMode() == MouseModes.DRAW_CIRCLE) {
             this.addPoint(pt[0], pt[1]);
-	} else if (this.getMode() == MouseModes.SELECT_CONTROLPOINT) {
-	    if (this.modifiedCurve) {
-		let r = this.selectionHandler.getSelection();
-		if (r && r.length == 2) {
-		    this.modifiedCurve.setPoint(r[1], pt[0], pt[1]);
+        } else if (this.getMode() == MouseModes.SELECT_CONTROLPOINT) {
+            if (this.modifiedCurve) {
+                let r = this.selectionHandler.getSelection();
+                if (r && r.length == 2) {
+                    this.modifiedCurve.setPoint(r[1], pt[0], pt[1]);
                     this.requestFrame();
-		}
-	    }
-	}
+                }
+            }
+        }
     }
 
     mouseLeaveCallback(evt) {

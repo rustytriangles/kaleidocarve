@@ -45,7 +45,7 @@ class MockContext {
 
     setTransform(a,b,c,d,e,f) {
     }
-};
+}
 
 describe('LinearCurve/generate', function () {
 

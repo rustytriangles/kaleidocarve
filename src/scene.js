@@ -161,7 +161,7 @@ class Scene {
         ctx.saveTransform();
         let step = 2.0 * Math.PI / this.numCopies;
         for (let i = 0; i < this.curves.length; i++) {
-	    ctx.comment('Curve ' + i);
+            ctx.comment('Curve ' + i);
             const c = this.curves[i];
 
             if (c.isSymmetric()) {

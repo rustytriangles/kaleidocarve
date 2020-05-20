@@ -20,11 +20,11 @@ function hitLine(px, py, x0, y0, x1, y1) {
     const tolerance = 0.03;
 
     if (dist(x0,y0,px,py) < tolerance) {
-     	return true;
+        return true;
     }
 
     if (dist(x1,y1,px,py) < tolerance) {
-     	return true;
+        return true;
     }
 
     const ax = px - x0;
@@ -34,13 +34,13 @@ function hitLine(px, py, x0, y0, x1, y1) {
     const t = dot(ax,ay,bx,by)/dot(bx,by,bx,by);
 
     if (t < 0 || t > 1) {
-	return false;
+        return false;
     }
 
     if (dist(px, py, x0 + t * bx, y0 + t * by) < tolerance) {
-	return true;
+        return true;
     } else {
-	return false;
+        return false;
     }
 }
 
@@ -81,12 +81,12 @@ function formatNumber(x) {
 }
 
 module.exports = {dist,
-		  hitLine,
-		  lerp,
-		  toDC,
-		  toNDC,
-		  transformPoint,
-		  radiusToDepth,
-		  sliderValueToRadius,
-		  radiusToSliderValue,
-		  formatNumber};
+                  hitLine,
+                  lerp,
+                  toDC,
+                  toNDC,
+                  transformPoint,
+                  radiusToDepth,
+                  sliderValueToRadius,
+                  radiusToSliderValue,
+                  formatNumber};

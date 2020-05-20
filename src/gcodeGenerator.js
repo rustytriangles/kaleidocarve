@@ -71,7 +71,7 @@ class GCodeGenerator {
         let writer = fs.createWriteStream(filename,
                                           {flags: 'w'}).on('error', handleErr);
         for (let i = 0; i < this.output.length; i++) {
-            writer.write(this.output[i] + '\n')
+            writer.write(this.output[i] + '\n');
         }
     }
 
@@ -93,7 +93,7 @@ class GCodeGenerator {
     moveAbove(x, y) {
         const [gx, gy] = xfm(x, y, this);
         this.output.push('G00 X' + util.formatNumber(gx)
-			 + ' Y' + util.formatNumber(gy));
+                         + ' Y' + util.formatNumber(gy));
     }
 
     // drop head until cut width = r
@@ -113,8 +113,8 @@ class GCodeGenerator {
         const [gx, gy] = xfm(x, y, this);
         const gz = computeZ(r, this);
         this.output.push('G01 X' + util.formatNumber(gx)
-			 + ' Y' + util.formatNumber(gy)
-			 + ' Z' + util.formatNumber(gz));
+                         + ' Y' + util.formatNumber(gy)
+                         + ' Z' + util.formatNumber(gz));
     }
 
     // generate full circle with center at current location + [r, 0]
@@ -123,7 +123,7 @@ class GCodeGenerator {
         // [I, J] is vector to center
         const [gi, gj] = xfm(r, 0, this);
         this.output.push('G02 I' + util.formatNumber(gi)
-			 + ' J' + util.formatNumber(gj));
+                         + ' J' + util.formatNumber(gj));
     }
 
     // push the current transform on a stack
