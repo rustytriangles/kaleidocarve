@@ -146,7 +146,10 @@ class GCodeGenerator {
 
 }
 
-function makeplan(pts, maxZ) {
+// generates a set of paths which carve pts, without exceeding maxZ in any
+// single pass.
+function makeplan(pts, maxZ, retractHeight) {
+
     // If none of the pts are too deep, the plan is fine.
     if (pts.filter(pt => pt[2] > maxZ).length == 0) {
         return pts;

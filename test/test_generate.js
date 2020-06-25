@@ -132,7 +132,7 @@ describe('makeplan', function () {
                    [10,10, 2],
                    [ 0,10, 1],
                    [ 0, 0, 0]];
-        let actual = gg.makeplan(pts, 2.5);
+        let actual = gg.makeplan(pts, 2.5, 0);
         let expected = pts;
         assert.deepEqual(actual, expected);
     });
@@ -143,7 +143,7 @@ describe('makeplan', function () {
                    [10,10, 2],
                    [ 0,10, 2],
                    [ 0, 0, 2]];
-        let actual = gg.makeplan(pts, 2.5);
+        let actual = gg.makeplan(pts, 2.5, 0);
         let expected = [[ 0, 0, 0  ],
                         [10, 0, 1.5],
                         [10,10, 1.5],
@@ -168,7 +168,7 @@ describe('makeplan', function () {
         assert.equal(pts.length, 5);
         assert.equal(pts[0].length, 3);
 
-        let actual = gg.makeplan(pts, 1.5);
+        let actual = gg.makeplan(pts, 1.5, 0);
 
         // first pass down to 1.5
         assert.deepEqual(actual[0], [ 0, 0, 0]);
