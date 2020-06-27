@@ -41,6 +41,12 @@ var ph = [5.72222222,-0.277777778, 0];
 
 var tol = 1.e-8;
 
+function assertPointCloseTo(act, exp, tol) {
+    assert.closeTo(act[0], exp[0], tol);
+    assert.closeTo(act[1], exp[1], tol);
+    assert.closeTo(act[2], exp[2], tol);
+}
+
 describe('intersect_line', function () {
     it('P0, P1', function() {
 
@@ -48,18 +54,9 @@ describe('intersect_line', function () {
 
         assert.equal(actual.length, 4);
 
-        assert.closeTo(actual[0][0], pa[0], tol);
-        assert.closeTo(actual[0][1], pa[1], tol);
-        assert.closeTo(actual[0][2], pa[2], tol);
-
-        assert.closeTo(actual[1][0], pb[0], tol);
-        assert.closeTo(actual[1][1], pb[1], tol);
-        assert.closeTo(actual[1][2], pb[2], tol);
-
-        assert.closeTo(actual[2][0], pc[0], tol);
-        assert.closeTo(actual[2][1], pc[1], tol);
-        assert.closeTo(actual[2][2], pc[2], tol);
-
+        assertPointCloseTo(actual[0], pa, tol);
+        assertPointCloseTo(actual[1], pb, tol);
+        assertPointCloseTo(actual[2], pc, tol);
         assert.isUndefined(actual[3]);
     });
 
@@ -71,9 +68,7 @@ describe('intersect_line', function () {
 
         assert.isUndefined(actual[0]);
         assert.isUndefined(actual[1]);
-        assert.closeTo(actual[2][0], pd[0], tol);
-        assert.closeTo(actual[2][1], pd[1], tol);
-        assert.closeTo(actual[2][2], pd[2], tol);
+        assertPointCloseTo(actual[2], pd, tol);
         assert.isUndefined(actual[3]);
     });
 
@@ -85,9 +80,7 @@ describe('intersect_line', function () {
 
         assert.isUndefined(actual[0]);
         assert.isUndefined(actual[1]);
-        assert.closeTo(actual[2][0], pe[0], tol);
-        assert.closeTo(actual[2][1], pe[1], tol);
-        assert.closeTo(actual[2][2], pe[2], tol);
+        assertPointCloseTo(actual[2], pe, tol);
         assert.isUndefined(actual[3]);
     });
 
@@ -99,9 +92,7 @@ describe('intersect_line', function () {
 
         assert.isUndefined(actual[0]);
         assert.isUndefined(actual[1]);
-        assert.closeTo(actual[2][0], pf[0], tol);
-        assert.closeTo(actual[2][1], pf[1], tol);
-        assert.closeTo(actual[2][2], pf[2], tol);
+        assertPointCloseTo(actual[2], pf, tol);
         assert.isUndefined(actual[3]);
     });
 
@@ -111,90 +102,88 @@ describe('intersect_line', function () {
 
         assert.equal(actual.length, 4);
 
-        assert.closeTo(actual[0][0], ph[0], tol);
-        assert.closeTo(actual[0][1], ph[1], tol);
-        assert.closeTo(actual[0][2], ph[2], tol);
-        assert.closeTo(actual[1][0], pg[0], tol);
-        assert.closeTo(actual[1][1], pg[1], tol);
-        assert.closeTo(actual[1][2], pg[2], tol);
+        assertPointCloseTo(actual[0], ph, tol);
+        assertPointCloseTo(actual[1], pg, tol);
         assert.isUndefined(actual[2]);
         assert.isUndefined(actual[3]);
     });
 });
 
 describe('generate_heights', function () {
-    it('Angled, multiple passes', function() {
+    it('forward', function() {
 
         let actual = mp.generate_runs([p0,p1,p2,p3,p4,p5], heights);
 
         assert.equal(actual.length, 3);
         assert.equal(actual[0].length, 1);
         assert.equal(actual[0][0].length, 4);
+
         assert.equal(actual[0][0][0].length, 3);
         assert.equal(actual[0][0][1].length, 3);
         assert.equal(actual[0][0][2].length, 3);
         assert.equal(actual[0][0][3].length, 3);
-        assert.closeTo(actual[0][0][0][0], pa[0], tol);
-        assert.closeTo(actual[0][0][0][1], pa[1], tol);
-        assert.closeTo(actual[0][0][0][2], pa[2], tol);
-        assert.closeTo(actual[0][0][1][0], pb[0], tol);
-        assert.closeTo(actual[0][0][1][1], pb[1], tol);
-        assert.closeTo(actual[0][0][1][2], pb[2], tol);
-        assert.closeTo(actual[0][0][2][0], pg[0], tol);
-        assert.closeTo(actual[0][0][2][1], pg[1], tol);
-        assert.closeTo(actual[0][0][2][2], pg[2], tol);
-        assert.closeTo(actual[0][0][3][0], ph[0], tol);
-        assert.closeTo(actual[0][0][3][1], ph[1], tol);
-        assert.closeTo(actual[0][0][3][2], ph[2], tol);
+        assertPointCloseTo(actual[0][0][0], pa, tol);
+        assertPointCloseTo(actual[0][0][1], pb, tol);
+        assertPointCloseTo(actual[0][0][2], pg, tol);
+        assertPointCloseTo(actual[0][0][3], ph, tol);
 
         assert.equal(actual[1].length, 1);
         assert.equal(actual[1][0].length, 8);
-        assert.closeTo(actual[1][0][0][0], pb[0], tol);
-        assert.closeTo(actual[1][0][0][1], pb[1], tol);
-        assert.closeTo(actual[1][0][0][2], pb[2], tol);
-        assert.closeTo(actual[1][0][1][0], pc[0], tol);
-        assert.closeTo(actual[1][0][1][1], pc[1], tol);
-        assert.closeTo(actual[1][0][1][2], pc[2], tol);
-        assert.closeTo(actual[1][0][2][0], pd[0], tol);
-        assert.closeTo(actual[1][0][2][1], pd[1], tol);
-        assert.closeTo(actual[1][0][2][2], pd[2], tol);
-        assert.closeTo(actual[1][0][3][0], p2[0], tol);
-        assert.closeTo(actual[1][0][3][1], p2[1], tol);
-        assert.closeTo(actual[1][0][3][2], p2[2], tol);
-        assert.closeTo(actual[1][0][4][0], pe[0], tol);
-        assert.closeTo(actual[1][0][4][1], pe[1], tol);
-        assert.closeTo(actual[1][0][4][2], pe[2], tol);
-        assert.closeTo(actual[1][0][5][0], pf[0], tol);
-        assert.closeTo(actual[1][0][5][1], pf[1], tol);
-        assert.closeTo(actual[1][0][5][2], pf[2], tol);
-        assert.closeTo(actual[1][0][6][0], p4[0], tol);
-        assert.closeTo(actual[1][0][6][1], p4[1], tol);
-        assert.closeTo(actual[1][0][6][2], p4[2], tol);
-        assert.closeTo(actual[1][0][7][0], pg[0], tol);
-        assert.closeTo(actual[1][0][7][1], pg[1], tol);
-        assert.closeTo(actual[1][0][7][2], pg[2], tol);
+        assertPointCloseTo(actual[1][0][0], pb, tol);
+        assertPointCloseTo(actual[1][0][1], pc, tol);
+        assertPointCloseTo(actual[1][0][2], pd, tol);
+        assertPointCloseTo(actual[1][0][3], p2, tol);
+        assertPointCloseTo(actual[1][0][4], pe, tol);
+        assertPointCloseTo(actual[1][0][5], pf, tol);
+        assertPointCloseTo(actual[1][0][6], p4, tol);
+        assertPointCloseTo(actual[1][0][7], pg, tol);
 
         assert.equal(actual[2].length, 2);
         assert.equal(actual[2][0].length, 3);
-        assert.closeTo(actual[2][0][0][0], pc[0], tol);
-        assert.closeTo(actual[2][0][0][1], pc[1], tol);
-        assert.closeTo(actual[2][0][0][2], pc[2], tol);
-        assert.closeTo(actual[2][0][1][0], p1[0], tol);
-        assert.closeTo(actual[2][0][1][1], p1[1], tol);
-        assert.closeTo(actual[2][0][1][2], p1[2], tol);
-        assert.closeTo(actual[2][0][2][0], pd[0], tol);
-        assert.closeTo(actual[2][0][2][1], pd[1], tol);
-        assert.closeTo(actual[2][0][2][2], pd[2], tol);
+        assertPointCloseTo(actual[2][0][0], pc, tol);
+        assertPointCloseTo(actual[2][0][1], p1, tol);
+        assertPointCloseTo(actual[2][0][2], pd, tol);
+
         assert.equal(actual[2][1].length, 3);
-        assert.closeTo(actual[2][1][0][0], pe[0], tol);
-        assert.closeTo(actual[2][1][0][1], pe[1], tol);
-        assert.closeTo(actual[2][1][0][2], pe[2], tol);
-        assert.closeTo(actual[2][1][1][0], p3[0], tol);
-        assert.closeTo(actual[2][1][1][1], p3[1], tol);
-        assert.closeTo(actual[2][1][1][2], p3[2], tol);
-        assert.closeTo(actual[2][1][2][0], pf[0], tol);
-        assert.closeTo(actual[2][1][2][1], pf[1], tol);
-        assert.closeTo(actual[2][1][2][2], pf[2], tol);
+        assertPointCloseTo(actual[2][1][0], pe, tol);
+        assertPointCloseTo(actual[2][1][1], p3, tol);
+        assertPointCloseTo(actual[2][1][2], pf, tol);
+
+    });
+
+    it('backward', function() {
+
+        let actual = mp.generate_runs([p5,p4,p3,p2,p1,p0], heights);
+
+        assert.equal(actual.length, 3);
+        assert.equal(actual[0].length, 1);
+        assert.equal(actual[0][0].length, 4);
+        assertPointCloseTo(actual[0][0][0], ph, tol);
+        assertPointCloseTo(actual[0][0][1], pg, tol);
+        assertPointCloseTo(actual[0][0][2], pb, tol);
+        assertPointCloseTo(actual[0][0][3], pa, tol);
+
+        assert.equal(actual[1].length, 1);
+        assert.equal(actual[1][0].length, 8);
+        assertPointCloseTo(actual[1][0][0], pg, tol);
+        assertPointCloseTo(actual[1][0][1], p4, tol);
+        assertPointCloseTo(actual[1][0][2], pf, tol);
+        assertPointCloseTo(actual[1][0][3], pe, tol);
+        assertPointCloseTo(actual[1][0][4], p2, tol);
+        assertPointCloseTo(actual[1][0][5], pd, tol);
+        assertPointCloseTo(actual[1][0][6], pc, tol);
+        assertPointCloseTo(actual[1][0][7], pb, tol);
+
+        assert.equal(actual[2].length, 2);
+        assert.equal(actual[2][0].length, 3);
+        assertPointCloseTo(actual[2][0][0], pf, tol);
+        assertPointCloseTo(actual[2][0][1], p3, tol);
+        assertPointCloseTo(actual[2][0][2], pe, tol);
+
+        assert.equal(actual[2][1].length, 3);
+        assertPointCloseTo(actual[2][1][0], pd, tol);
+        assertPointCloseTo(actual[2][1][1], p1, tol);
+        assertPointCloseTo(actual[2][1][2], pc, tol);
 
     });
 });
